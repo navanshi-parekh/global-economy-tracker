@@ -58,7 +58,6 @@ export default function GlobalHistoricalAndNewsTerminal() {
     ]);
   }, []);
 
-  // Configure toggle labels and structural state values
   const datasetToggles = [
     { id: 'gdp', label: 'Real GDP Output', icon: BarChart3, color: 'text-indigo-400 border-indigo-500/30 bg-indigo-500/10' },
     { id: 'macro', label: 'Macro Health Index', icon: Activity, color: 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10' },
@@ -87,26 +86,24 @@ export default function GlobalHistoricalAndNewsTerminal() {
           </Link>
         </div>
 
-        {/* 💻 MAIN SPLIT WORKSPACE WINDOW */}
-        <div className="flex-1 flex space-x-4 min-h-0 overflow-hidden w-full">
+        {/* 💻 MAIN SPLIT WORKSPACE WINDOW - MOBILE STACK RESPONSIVE PATCH */}
+        <div className="flex-1 flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4 min-h-0 overflow-y-auto lg:overflow-hidden w-full">
           
-          {/* 📊 LEFT BLOCK: TIME-SERIES ENGINE + COMPACT SUB-TOGGLE MATRIX CONTAINER (60% Width) */}
-          <div className="w-[60%] bg-slate-900/60 border border-slate-800/80 rounded-xl p-4 shadow-2xl h-full flex flex-col justify-between overflow-hidden">
+          {/* 📊 LEFT BLOCK: TIME-SERIES ENGINE (Stacks full width on mobile, 60% wide on large screens) */}
+          <div className="w-full lg:w-[60%] bg-slate-900/60 border border-slate-800/80 rounded-xl p-4 shadow-2xl h-[450px] lg:h-full flex flex-col justify-between overflow-hidden shrink-0 lg:shrink">
             
-            {/* Upper Chart Field */}
             <div className="flex-1 min-h-0">
               <GlobalChart />
             </div>
 
-            {/* 🎛️ THE ADDITION: HOVER/CLICK SUB-TOGGLE TRACK GRID SYSTEM */}
+            {/* SEGMENTED DATASET TOGGLES */}
             <div className="mt-4 pt-3 border-t border-slate-800/50 shrink-0">
               <span className="text-[9px] font-mono font-bold tracking-widest text-slate-500 block mb-2 uppercase">
                 ⚙️ SELECT SYSTEM TIME-SERIES DATASET TRAJECTORY:
               </span>
-              <div className="grid grid-cols-4 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {datasetToggles.map((toggle) => {
                   const Icon = toggle.icon;
-                  // Handle custom baseline state matching fallbacks safely
                   const isSelected = activeGlobalToggle === toggle.id || (toggle.id === 'gdp' && activeGlobalToggle !== 'macro' && activeGlobalToggle !== 'inflation' && activeGlobalToggle !== 'workforce');
                   
                   return (
@@ -129,8 +126,8 @@ export default function GlobalHistoricalAndNewsTerminal() {
 
           </div>
 
-          {/* 📡 RIGHT BLOCK: DEEP LIVE news STREAM CARD (40% Width) */}
-          <div className="w-[40%] bg-slate-900/40 border border-slate-800/50 rounded-xl p-4 shadow-2xl h-full flex flex-col overflow-hidden">
+          {/* 📡 RIGHT BLOCK: DEEP LIVE NEWS STREAM CARD (Stacks below graph on mobile, 40% wide on large screens) */}
+          <div className="w-full lg:w-[40%] bg-slate-900/40 border border-slate-800/50 rounded-xl p-4 shadow-2xl h-[400px] lg:h-full flex flex-col overflow-hidden shrink-0 lg:shrink">
             <div className="flex items-center justify-between border-b border-slate-850 pb-2.5 shrink-0">
               <div className="flex items-center space-x-2 text-[10px] font-mono font-bold tracking-wider text-rose-400 uppercase">
                 <Radio className="w-3.5 h-3.5 animate-pulse text-rose-500" />
@@ -141,6 +138,7 @@ export default function GlobalHistoricalAndNewsTerminal() {
               </span>
             </div>
 
+            {/* Scrollable Feed Track */}
             <div className="flex-1 overflow-y-auto mt-3 space-y-2 pr-1 scrollbar-thin scrollbar-thumb-slate-800/80 scrollbar-track-transparent min-h-0">
               {liveNews.map((news, idx) => (
                 <div 
