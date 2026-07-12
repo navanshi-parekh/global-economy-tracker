@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { useEconomyStore } from '../../store/useEconomyStore'; // 🚀 PATH FIX: Direct relative navigation out of app/macro into store
+import { useEconomyStore } from '../../store/useEconomyStore'; 
 import EconomicMap from '../../components/EconomicMap';
 import AIAnalysisPanel from '../../components/AIAnalysisPanel';
 import Link from 'next/link';

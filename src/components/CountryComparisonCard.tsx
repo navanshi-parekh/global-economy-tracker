@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { fetchLiveCountryData, LiveCountryData } from '../utils/apiEngine';
+import { fetchLiveCountryData, type LiveCountryData } from '../utils/apiEngine';
 import { TrendingUp, Activity, Landmark, Users } from 'lucide-react';
 
 export default function CountryComparisonCard({ countryCode }: { countryCode: string }) {
