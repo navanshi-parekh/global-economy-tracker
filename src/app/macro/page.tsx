@@ -1,20 +1,19 @@
 'use client';
 import React from 'react';
-import { useEconomyStore } from '../../components/../store/useEconomyStore';
+import { useEconomyStore } from '../../store/useEconomyStore'; // 🚀 PATH FIX: Direct relative navigation out of app/macro into store
 import EconomicMap from '../../components/EconomicMap';
 import AIAnalysisPanel from '../../components/AIAnalysisPanel';
 import Link from 'next/link';
 import { ArrowLeft, Landmark, Globe } from 'lucide-react';
 
 export default function MacroHealthPage() {
-  const store = useEconomyStore() as any; // 🚀 TYPE CAST FIXED: Prevents type 'never' checks on unmapped store properties
+  const store = useEconomyStore() as any; 
   
   const activeCountry = store.activeCountry;
   const globalDataCache = store.globalDataCache || {};
 
   let currentScore = 60;
   if (activeCountry) {
-    // Universal extraction handling whether store value is a string or a structured object
     const codeKey = typeof activeCountry === 'string' 
       ? activeCountry.toUpperCase() 
       : (activeCountry.code || activeCountry.id || "").toUpperCase();
