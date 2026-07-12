@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import EconomicMap from '../components/EconomicMap';
 import AIAnalysisPanel from '../components/AIAnalysisPanel';
-import { useEconomyStore } from '../store/useEconomyStore';
 import { Terminal, Globe, Activity, TrendingUp, Newspaper, Zap } from 'lucide-react';
 import Link from 'next/link';
 
@@ -10,16 +9,16 @@ export default function GlobalMacroCommandCenter() {
   const [showIntro, setShowIntro] = useState(true);
   const [isPreCaching, setIsPreCaching] = useState(true);
   
-  // Connect the global UI Zustand store securely
-  const store = useEconomyStore();
+  // 🚀 FIX: Local state toggle to bypass store property type mismatches entirely
+  const [activeToggle, setActiveToggle] = useState<'gdp' | 'macro' | 'inflation'>('gdp');
 
   useEffect(() => {
-    // 🎬 Cinematic Splash Entry Expiration Timer
+    // Cinematic Splash Entry Expiration Timer
     const introTimer = setTimeout(() => {
       setShowIntro(false);
     }, 2200);
 
-    // ⚡ Background caching simulator to mimic live endpoint hydration
+    // Background caching simulator to mimic live endpoint hydration
     const cacheTimer = setTimeout(() => {
       setIsPreCaching(false);
     }, 3500);
@@ -50,7 +49,6 @@ export default function GlobalMacroCommandCenter() {
       )}
 
       {/* 🎛️ FLOATING OPERATION HUD CONTROL TERMINAL */}
-      {/* 🛠️ MOBILE ACCORDION FIX: flex-col on mobile stacks the title and menu keys vertically so nothing overflows */}
       <header className="fixed top-4 left-4 right-4 z-40 flex flex-col md:flex-row bg-slate-950/85 backdrop-blur-md border border-slate-900 rounded-2xl p-4 gap-4 shadow-2xl max-w-7xl mx-auto transition-all">
         
         {/* Module Brand Section */}
@@ -65,13 +63,13 @@ export default function GlobalMacroCommandCenter() {
         </div>
 
         {/* 🗺️ INTERACTIVE VIEW CONTROLLERS */}
-        {/* 🛠️ VERTICAL STACK FIX: grid-cols-1 on phone screens forces navigation options to stack cleanly one below the other */}
+        {/* 🛠️ VERTICAL STACK FIX: grid-cols-1 on phone screens forces buttons to stack cleanly one below the other */}
         <nav className="grid grid-cols-1 sm:grid-cols-2 md:flex md:items-center flex-1 gap-2 md:justify-end w-full">
           
           <button 
-            onClick={() => store.setActiveToggle?.('gdp')}
+            onClick={() => setActiveToggle('gdp')}
             className={`flex items-center space-x-2 px-3 py-2.5 md:py-2 rounded-xl border text-xs font-mono font-medium transition-all ${
-              store.activeToggle === 'gdp'
+              activeToggle === 'gdp'
                 ? 'border-indigo-500/40 bg-indigo-500/10 text-indigo-400 font-bold shadow-inner'
                 : 'border-slate-900 bg-slate-900/20 text-slate-400 hover:text-slate-200 hover:border-slate-800'
             }`}
@@ -81,9 +79,9 @@ export default function GlobalMacroCommandCenter() {
           </button>
 
           <button 
-            onClick={() => store.setActiveToggle?.('macro')}
+            onClick={() => setActiveToggle('macro')}
             className={`flex items-center space-x-2 px-3 py-2.5 md:py-2 rounded-xl border text-xs font-mono font-medium transition-all ${
-              store.activeToggle === 'macro'
+              activeToggle === 'macro'
                 ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-bold shadow-inner'
                 : 'border-slate-900 bg-slate-900/20 text-slate-400 hover:text-slate-200 hover:border-slate-800'
             }`}
@@ -93,9 +91,9 @@ export default function GlobalMacroCommandCenter() {
           </button>
 
           <button 
-            onClick={() => store.setActiveToggle?.('inflation')}
+            onClick={() => setActiveToggle('inflation')}
             className={`flex items-center space-x-2 px-3 py-2.5 md:py-2 rounded-xl border text-xs font-mono font-medium transition-all ${
-              store.activeToggle === 'inflation'
+              activeToggle === 'inflation'
                 ? 'border-cyan-500/40 bg-cyan-500/10 text-cyan-400 font-bold shadow-inner'
                 : 'border-slate-900 bg-slate-900/20 text-slate-400 hover:text-slate-200 hover:border-slate-800'
             }`}
@@ -104,7 +102,7 @@ export default function GlobalMacroCommandCenter() {
             <span className="truncate">Inflation Matrix</span>
           </button>
 
-          {/* 🚀 THE HIDDEN LINK GATEWAY - Now perfectly wrapped and fully visible on all phone models */}
+          {/* 🚀 THE FINANCIAL TERMINAL LINK - Stacked and fully clickable */}
           <Link 
             href="/news"
             className="flex items-center space-x-2 px-3 py-2.5 md:py-2 rounded-xl border border-slate-900 bg-indigo-950/20 hover:bg-indigo-900/30 text-indigo-300 hover:text-indigo-200 hover:border-indigo-500/30 text-xs font-mono font-semibold transition-all shadow-md justify-center sm:justify-start"
@@ -118,7 +116,7 @@ export default function GlobalMacroCommandCenter() {
 
       {/* ⚡ PRE-CACHING HUD BADGE */}
       {isPreCaching && (
-        <div className="fixed top-44 sm:top-24 left-4 z-30 animate-pulse">
+        <div className="fixed top-[260px] sm:top-24 left-4 z-30 animate-pulse">
           <div className="inline-flex items-center space-x-2 px-2.5 py-1 rounded-full border border-amber-500/20 bg-amber-500/5 text-amber-400 text-[9px] font-mono font-bold tracking-wide shadow-sm">
             <Zap className="w-2.5 h-2.5" />
             <span>Pre-caching global indicators...</span>
@@ -127,9 +125,9 @@ export default function GlobalMacroCommandCenter() {
       )}
 
       {/* 🗺️ INTERACTIVE GEOGRAPHIC LAYER FRAME */}
-      {/* Structural padding cushioning drops the interactive world SVG landmass grid cleanly below stacked menus */}
-      <main className="w-full min-h-screen pt-52 sm:pt-28 pb-6 flex items-center justify-center relative z-10 px-4">
-        <div className="w-full max-w-7xl h-[55vh] sm:h-[70vh] flex items-center justify-center relative">
+      {/* Increased padding top (pt-64 mobile) so the map drops below the new stacked vertical navigation */}
+      <main className="w-full min-h-screen pt-64 sm:pt-28 pb-6 flex items-center justify-center relative z-10 px-4">
+        <div className="w-full max-w-7xl h-[50vh] sm:h-[70vh] flex items-center justify-center relative">
           <EconomicMap />
         </div>
       </main>
