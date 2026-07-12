@@ -14,8 +14,12 @@ interface LiveArticle {
 }
 
 export default function GlobalHistoricalAndNewsTerminal() {
-  const { activeGlobalToggle, setActiveGlobalToggle } = useEconomyStore();
+  // 🚀 CUSTOM FIX: Use an explicit, local component state tracking property to bypass store key desync issues entirely!
+  const [activeSegmentToggle, setActiveSegmentToggle] = useState<'gdp' | 'macro' | 'inflation' | 'workforce'>('gdp');
   const [liveNews, setLiveNews] = useState<LiveArticle[]>([]);
+
+  // Safely grab the global store to make sure core handlers don't throw errors
+  const store = useEconomyStore();
 
   useEffect(() => {
     const timeNow = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -86,17 +90,17 @@ export default function GlobalHistoricalAndNewsTerminal() {
           </Link>
         </div>
 
-        {/* 💻 MAIN SPLIT WORKSPACE WINDOW - MOBILE STACK RESPONSIVE PATCH */}
+        {/* 💻 MAIN SPLIT WORKSPACE WINDOW */}
         <div className="flex-1 flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4 min-h-0 overflow-y-auto lg:overflow-hidden w-full">
           
-          {/* 📊 LEFT BLOCK: TIME-SERIES ENGINE (Stacks full width on mobile, 60% wide on large screens) */}
+          {/* 📊 LEFT BLOCK: TIME-SERIES ENGINE */}
           <div className="w-full lg:w-[60%] bg-slate-900/60 border border-slate-800/80 rounded-xl p-4 shadow-2xl h-[450px] lg:h-full flex flex-col justify-between overflow-hidden shrink-0 lg:shrink">
             
             <div className="flex-1 min-h-0">
-              <GlobalChart />
+              <GlobalChart overrideToggle={activeSegmentToggle} />
             </div>
 
-            {/* SEGMENTED DATASET TOGGLES */}
+            {/* Local Segments Selection Row */}
             <div className="mt-4 pt-3 border-t border-slate-800/50 shrink-0">
               <span className="text-[9px] font-mono font-bold tracking-widest text-slate-500 block mb-2 uppercase">
                 ⚙️ SELECT SYSTEM TIME-SERIES DATASET TRAJECTORY:
@@ -104,12 +108,12 @@ export default function GlobalHistoricalAndNewsTerminal() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {datasetToggles.map((toggle) => {
                   const Icon = toggle.icon;
-                  const isSelected = activeGlobalToggle === toggle.id || (toggle.id === 'gdp' && activeGlobalToggle !== 'macro' && activeGlobalToggle !== 'inflation' && activeGlobalToggle !== 'workforce');
+                  const isSelected = activeSegmentToggle === toggle.id;
                   
                   return (
                     <button
                       key={toggle.id}
-                      onClick={() => setActiveGlobalToggle(toggle.id as any)}
+                      onClick={() => setActiveSegmentToggle(toggle.id as any)}
                       className={`flex items-center justify-center space-x-1.5 px-2 py-2 rounded-lg border text-[10px] font-mono font-medium tracking-wide transition-all duration-150 ${
                         isSelected
                           ? toggle.color + ' font-bold shadow-inner border-current'
@@ -126,7 +130,7 @@ export default function GlobalHistoricalAndNewsTerminal() {
 
           </div>
 
-          {/* 📡 RIGHT BLOCK: DEEP LIVE NEWS STREAM CARD (Stacks below graph on mobile, 40% wide on large screens) */}
+          {/* 📡 RIGHT BLOCK: DEEP LIVE NEWS STREAM CARD */}
           <div className="w-full lg:w-[40%] bg-slate-900/40 border border-slate-800/50 rounded-xl p-4 shadow-2xl h-[400px] lg:h-full flex flex-col overflow-hidden shrink-0 lg:shrink">
             <div className="flex items-center justify-between border-b border-slate-850 pb-2.5 shrink-0">
               <div className="flex items-center space-x-2 text-[10px] font-mono font-bold tracking-wider text-rose-400 uppercase">
@@ -138,7 +142,6 @@ export default function GlobalHistoricalAndNewsTerminal() {
               </span>
             </div>
 
-            {/* Scrollable Feed Track */}
             <div className="flex-1 overflow-y-auto mt-3 space-y-2 pr-1 scrollbar-thin scrollbar-thumb-slate-800/80 scrollbar-track-transparent min-h-0">
               {liveNews.map((news, idx) => (
                 <div 
