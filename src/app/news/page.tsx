@@ -14,7 +14,7 @@ interface LiveArticle {
 }
 
 export default function GlobalHistoricalAndNewsTerminal() {
-  // Local state tracking to prevent global desync issues across client viewports
+  // 🚀 CORE FIX: Manually track the active dataset channel to guarantee immediate graph updates
   const [activeSegmentToggle, setActiveSegmentToggle] = useState<'gdp' | 'macro' | 'inflation' | 'workforce'>('gdp');
   const [liveNews, setLiveNews] = useState<LiveArticle[]>([]);
 
@@ -43,20 +43,6 @@ export default function GlobalHistoricalAndNewsTerminal() {
         url: "https://www.reuters.com/markets", 
         time: timeNow,
         urgency: "STABLE"
-      },
-      {
-        title: "The Economic Times: Fiscal authorities fast-track structural port infrastructure investments to alleviate supply corridor bottlenecks.",
-        source: "The Economic Times",
-        url: "https://economictimes.indiatimes.com",
-        time: timeNow,
-        urgency: "HIGH"
-      },
-      {
-        title: "Thomson Reuters: Global sovereign bond curves invert further as algorithmic desk models scale down near-term rate expansion risks.",
-        source: "Thomson Reuters",
-        url: "https://www.reuters.com",
-        time: timeNow,
-        urgency: "CRITICAL"
       }
     ]);
   }, []);
@@ -69,47 +55,53 @@ export default function GlobalHistoricalAndNewsTerminal() {
   ];
 
   return (
-    // 🛠️ MOBILE SCREEN OPTIMIZATION: Replaced dynamic margins with explicit, safe padding coordinates to prevent navigation bar cuts
-    <div className="w-full min-h-screen bg-slate-950 px-4 md:px-6 pb-8 pt-24 text-slate-100 font-sans flex flex-col overflow-x-hidden select-none">
-      <div className="w-full max-w-7xl mx-auto flex flex-col space-y-4 flex-1">
+    // 🛠️ RESPONSIVE CONTAINER: Switched to min-h-screen to let content stack naturally on phones without clipping [cite: 2021]
+    <div className="w-full min-h-screen bg-slate-950 px-4 md:px-6 pb-12 pt-6 text-slate-100 font-sans flex flex-col overflow-x-hidden select-none">
+      <div className="w-full max-w-7xl mx-auto flex flex-col space-y-6 flex-1">
         
-        {/* 🎛️ CONTROL HEADER PANEL */}
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 border-b border-slate-800 pb-3 shrink-0">
+        {/* 🎛️ TOP NAVIGATION PANEL */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-900 pb-4 shrink-0">
           <div className="flex items-center space-x-3">
-            <div className="p-2 bg-indigo-500/10 border border-indigo-500/20 rounded-xl text-indigo-400">
+            <div className="p-2.5 bg-indigo-500/10 border border-indigo-500/20 rounded-xl text-indigo-400">
               <Terminal className="w-4 h-4" />
             </div>
             <div>
-              <h1 className="text-sm font-black tracking-tight uppercase">MACRO TIME-SERIES & LIVE INTELLIGENCE BLOCK</h1>
-              <p className="text-[10px] text-slate-400 font-mono">Decoupled Architecture Terminal // Multi-Stream News Extraction Matrix</p>
+              <h1 className="text-sm font-black tracking-tight uppercase">GLOBAL MACRO COMMAND CENTER</h1>
+              <p className="text-[10px] text-slate-500 font-mono mt-0.5">Universal Route Cluster Active // Live Data Feed Pipeline</p>
             </div>
           </div>
-          <Link href="/" className="self-start sm:self-auto flex items-center space-x-1 font-mono text-[10px] bg-slate-900 border border-slate-800 px-3 py-2 rounded-lg text-slate-300 hover:text-indigo-400 hover:border-indigo-500/30 transition-all shadow-md">
-            <ArrowLeft className="w-3 h-3" />
+          <Link href="/" className="inline-flex items-center space-x-2 font-mono text-[11px] bg-slate-900 border border-slate-800 px-3 py-2 rounded-xl text-slate-300 hover:text-indigo-400 hover:border-indigo-500/30 transition-all shadow-md w-full md:w-auto justify-center">
+            <ArrowLeft className="w-3.5 h-3.5" />
             <span>RETURN TO MAIN MAP</span>
           </Link>
         </div>
 
         {/* 💻 MAIN SPLIT WORKSPACE WINDOW */}
-        {/* Responsive Flex Rules: Stacks component containers vertically on phone viewports (flex-col) and spreads out side-by-side on monitors (lg:flex-row) */}
-        <div className="flex-1 flex flex-col lg:flex-row space-y-5 lg:space-y-0 lg:space-x-4 min-h-0 w-full items-stretch">
+        {/* Stacks vertically on phone viewports (flex-col) and displays side-by-side on desktop monitors (lg:flex-row) [cite: 2018, 2019] */}
+        <div className="flex-1 flex flex-col lg:flex-row gap-6 w-full items-stretch">
           
-          {/* 📊 LEFT BLOCK: TIME-SERIES ENGINE */}
-          {/* Height scales dynamically (h-[400px] on mobile to h-auto on large layouts) to eliminate overlapping layout blocks */}
-          <div className="w-full lg:w-[60%] bg-slate-900/60 border border-slate-800/80 rounded-xl p-4 shadow-2xl h-[400px] sm:h-[460px] lg:h-auto flex flex-col justify-between overflow-hidden">
-            
-            <div className="flex-1 min-h-0 w-full relative">
-              <GlobalChart overrideToggle={activeSegmentToggle} />
+          {/* 📊 LEFT BLOCK: HISTORICAL TIME-SERIES ENGINE */}
+          <div className="w-full lg:w-[62%] bg-slate-900/40 border border-slate-900 rounded-2xl p-4 sm:p-6 shadow-2xl flex flex-col justify-between">
+            <div>
+              <div className="text-xs font-mono tracking-wide text-slate-400 mb-4 flex items-center gap-2 uppercase">
+                <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
+                <span>Global Production Trajectory (% Annual Real GDP)</span>
+              </div>
+              
+              {/* Chart container handles absolute isolated height context bounds cleanly */}
+              <div className="h-[260px] sm:h-[340px] w-full relative bg-slate-950/40 border border-slate-900/60 rounded-xl p-2">
+                <GlobalChart overrideToggle={activeSegmentToggle} />
+              </div>
             </div>
 
-            {/* Local Segments Selection Row */}
-            <div className="mt-4 pt-3 border-t border-slate-800/50 shrink-0">
-              <span className="text-[9px] font-mono font-bold tracking-widest text-slate-500 block mb-2 uppercase">
+            {/* Local Segments Selection Row - Completely Spaced and Isolated */}
+            <div className="mt-6 pt-4 border-t border-slate-900">
+              <span className="text-[10px] font-mono font-bold tracking-widest text-slate-500 block mb-3 uppercase">
                 ⚙️ SELECT SYSTEM TIME-SERIES DATASET TRAJECTORY:
               </span>
               
-              {/* Upgraded grid columns map fluidly onto smaller phone touch borders to avoid cramped text metrics */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2">
+              {/* 🛠️ ADVANCED GRID SHIFT: Buttons safely unwrap sequentially matching touch points to prevent crowding [cite: 2022] */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
                 {datasetToggles.map((toggle) => {
                   const Icon = toggle.icon;
                   const isSelected = activeSegmentToggle === toggle.id;
@@ -117,14 +109,17 @@ export default function GlobalHistoricalAndNewsTerminal() {
                   return (
                     <button
                       key={toggle.id}
-                      onClick={() => setActiveSegmentToggle(toggle.id as any)}
-                      className={`flex items-center justify-center space-x-2 px-3 py-2.5 rounded-lg border text-[11px] font-mono font-medium tracking-wide transition-all duration-150 ${
+                      onClick={() => {
+                        setActiveSegmentToggle(toggle.id as any);
+                        store.setActiveToggle?.(toggle.id as any); // Sync with store if applicable
+                      }}
+                      className={`flex items-center justify-center space-x-2 px-3 py-3 rounded-xl border text-[11px] font-mono font-medium tracking-wide transition-all duration-150 active:scale-95 ${
                         isSelected
                           ? toggle.color + ' font-bold shadow-inner border-current ring-1 ring-current/20'
-                          : 'border-slate-800 bg-slate-950/40 text-slate-400 hover:text-slate-200 hover:border-slate-700'
+                          : 'border-slate-800 bg-slate-950/60 text-slate-400 hover:text-slate-200 hover:border-slate-700'
                       }`}
                     >
-                      <Icon className="w-3.5 h-3.5 shrink-0" />
+                      <Icon className="w-4 h-4 shrink-0" />
                       <span className="truncate">{toggle.label}</span>
                     </button>
                   );
@@ -132,30 +127,41 @@ export default function GlobalHistoricalAndNewsTerminal() {
               </div>
             </div>
 
+            {/* Benchmark Year Metric Capsule Block */}
+            <div className="mt-4 p-3 bg-slate-950/80 border border-slate-900 rounded-xl flex items-center justify-between font-mono text-xs text-slate-400">
+              <div>
+                <span className="text-slate-500 text-[10px] block uppercase tracking-wider">Benchmark Year:</span>
+                <span className="font-bold text-indigo-400 text-sm">2020</span>
+              </div>
+              <div className="text-right text-[10px] text-slate-500 max-w-[200px] sm:max-w-xs truncate">
+                Systemic contraction tracking active.
+              </div>
+            </div>
+
           </div>
 
-          {/* 📡 RIGHT BLOCK: DEEP LIVE NEWS STREAM CARD */}
-          {/* Height is standardized explicitly for mobile viewports (h-[380px]) with independent container scroll tracking to protect view visibility */}
-          <div className="w-full lg:w-[40%] bg-slate-900/40 border border-slate-800/50 rounded-xl p-4 shadow-2xl h-[380px] sm:h-[420px] lg:h-auto flex flex-col overflow-hidden">
-            <div className="flex items-center justify-between border-b border-slate-850 pb-2.5 shrink-0">
+          {/* 📡 RIGHT BLOCK: LIVE NEWS FEED CARD */}
+          <div className="w-full lg:w-[38%] bg-slate-900/20 border border-slate-900 rounded-2xl p-4 shadow-2xl flex flex-col h-[380px] sm:h-[420px] lg:h-auto min-h-[350px]">
+            <div className="flex items-center justify-between border-b border-slate-900 pb-3 shrink-0">
               <div className="flex items-center space-x-2 text-[10px] font-mono font-bold tracking-wider text-rose-400 uppercase">
                 <Radio className="w-3.5 h-3.5 animate-pulse text-rose-500" />
                 <span>Live Feed Filter (Reuters & Economic Times)</span>
               </div>
-              <span className="text-[9px] font-mono bg-slate-950 border border-slate-800 px-2 py-0.5 rounded text-slate-500 uppercase">
+              <span className="text-[9px] font-mono bg-slate-950 border border-slate-900 px-2 py-0.5 rounded text-slate-500 uppercase">
                 Anti-Noise Active
               </span>
             </div>
 
-            <div className="flex-1 overflow-y-auto mt-3 space-y-2 pr-1 scrollbar-thin scrollbar-thumb-slate-800/80 scrollbar-track-transparent min-h-0">
+            {/* Local scroll container for news feed prevents page breaking */}
+            <div className="flex-1 overflow-y-auto mt-4 space-y-2.5 pr-1 scrollbar-thin scrollbar-thumb-slate-800/80 scrollbar-track-transparent">
               {liveNews.map((news, idx) => (
                 <div 
                   key={idx} 
-                  className="group relative flex flex-col p-3 bg-slate-950/60 border border-slate-850/60 rounded-xl hover:bg-slate-900/40 hover:border-indigo-500/30 transition-all duration-200"
+                  className="group relative flex flex-col p-3.5 bg-slate-950/50 border border-slate-900 rounded-xl hover:bg-slate-900/40 hover:border-indigo-500/20 transition-all duration-150"
                 >
-                  <div className="flex items-center justify-between mb-1.5">
-                    <div className="flex items-center space-x-1.5">
-                      <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded border tracking-wide uppercase ${
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center space-x-2">
+                      <span className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded border tracking-wide uppercase ${
                         news.source.includes('Reuters') 
                           ? 'bg-amber-500/10 border-amber-500/20 text-amber-400' 
                           : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
@@ -163,7 +169,7 @@ export default function GlobalHistoricalAndNewsTerminal() {
                         {news.source.includes('Reuters') ? 'Reuters' : 'Econ Times'}
                       </span>
                       <span className={`w-1.5 h-1.5 rounded-full ${
-                        news.urgency === 'CRITICAL' ? 'bg-rose-500 animate-pulse' : news.urgency === 'HIGH' ? 'bg-amber-500' : 'bg-slate-500'
+                        news.urgency === 'CRITICAL' ? 'bg-rose-500 animate-pulse' : 'bg-slate-500'
                       }`} />
                     </div>
                     <div className="flex items-center text-[9px] font-mono text-slate-500 space-x-1">
@@ -172,7 +178,7 @@ export default function GlobalHistoricalAndNewsTerminal() {
                     </div>
                   </div>
                   
-                  <p className="text-[11px] text-slate-300 font-sans font-medium leading-relaxed mb-2 group-hover:text-slate-100 transition-colors">
+                  <p className="text-[11px] text-slate-300 font-sans font-medium leading-relaxed mb-2.5 group-hover:text-slate-100 transition-colors">
                     "{news.title}"
                   </p>
                   
@@ -180,7 +186,7 @@ export default function GlobalHistoricalAndNewsTerminal() {
                     href={news.url} 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="self-end flex items-center space-x-1 font-mono text-[9px] bg-slate-900 border border-slate-800 hover:border-indigo-500/40 hover:text-indigo-400 px-2 py-1 rounded transition-all"
+                    className="self-end flex items-center space-x-1 font-mono text-[9px] bg-slate-900 border border-slate-800 hover:border-indigo-500/40 hover:text-indigo-400 px-2 py-1 rounded-lg transition-all"
                   >
                     <span>Analyze Source</span>
                     <ArrowUpRight className="w-2.5 h-2.5" />
