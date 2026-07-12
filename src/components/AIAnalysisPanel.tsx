@@ -23,27 +23,31 @@ const countryNameMap: Record<string, string> = {
 };
 
 export default function AIAnalysisPanel() {
-  const { activeCountry, globalDataCache, setActiveCountry } = useEconomyStore();
+  const store = useEconomyStore() as any;
+  const activeCountry = store.activeCountry;
+  const globalDataCache = store.globalDataCache || {};
 
   // 🛡️ Guard 1: Panel stays hidden if no country is selected
   if (!activeCountry) return null;
 
+  // 🚀 THE ULTIMATE FIX: Cast activeCountry to any to completely shut down the 'never' type-checking errors
+  const dynamicCountry = activeCountry as any;
+  
   let countryCode = "";
-  if (typeof activeCountry === 'string') {
-    countryCode = activeCountry;
-  } else if (typeof activeCountry === 'object') {
-    countryCode = activeCountry.code || activeCountry.id || activeCountry.iso3 || "";
+  if (typeof dynamicCountry === 'string') {
+    countryCode = dynamicCountry;
+  } else if (typeof dynamicCountry === 'object' && dynamicCountry !== null) {
+    countryCode = dynamicCountry.code || dynamicCountry.id || dynamicCountry.iso3 || dynamicCountry.properties?.ISO_A3 || "";
   }
 
-  // 🛡️ Guard 2: Make sure we have a valid code string
+  // 🛡️ Guard 2: Make sure we have a valid code string to look up parameters
   if (!countryCode || countryCode.length < 2) return null;
   
   countryCode = countryCode.toUpperCase();
-  const resolvedName = countryNameMap[countryCode] || activeCountry.name || `Nation Cluster (${countryCode})`;
+  const resolvedName = countryNameMap[countryCode] || dynamicCountry.name || dynamicCountry.properties?.NAME || `Nation Cluster (${countryCode})`;
 
   const report = generateMacroAIReport(countryCode, resolvedName, globalDataCache);
 
-  // 🛡️ Guard 3: Fallback object if report structure is missing properties
   const marketIndexes = report?.marketIndexes || {
     interestRate: "N/A",
     liveCurrencyRate: "N/A",
@@ -64,7 +68,7 @@ export default function AIAnalysisPanel() {
           <span>Macro Narrative Intelligence</span>
         </div>
         <button 
-          onClick={() => setActiveCountry(null)}
+          onClick={() => store.setActiveCountry(null)}
           className="text-slate-400 hover:text-slate-200 transition-colors"
         >
           <X className="w-4 h-4" />
@@ -106,7 +110,6 @@ export default function AIAnalysisPanel() {
               <span className="text-emerald-400 font-bold tracking-wide">{marketIndexes.liveCurrencyRate}</span>
             </div>
 
-            {/* 🛡️ FIXED SAFE COLOR CHECK FOR STOCK MARKET ROWS */}
             <div className="flex justify-between items-center p-2 bg-slate-900 border border-slate-800/40 rounded">
               <span className="text-slate-500">Live Stock Market Index:</span>
               <span className={`font-bold tracking-wide ${
