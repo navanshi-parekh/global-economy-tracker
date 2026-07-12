@@ -1,24 +1,27 @@
 'use client';
 import React from 'react';
-import { useEconomyStore } from '../../store/useEconomyStore';
+import { useEconomyStore } from '../../components/../store/useEconomyStore';
 import EconomicMap from '../../components/EconomicMap';
 import AIAnalysisPanel from '../../components/AIAnalysisPanel';
 import Link from 'next/link';
-import { ArrowLeft, Landmark, ShieldAlert, Globe } from 'lucide-react';
+import { ArrowLeft, Landmark, Globe } from 'lucide-react';
 
 export default function MacroHealthPage() {
-  const store = useEconomyStore();
+  const store = useEconomyStore() as any; // 🚀 TYPE CAST FIXED: Prevents type 'never' checks on unmapped store properties
   
-  // 🚀 CUSTOM FIX: Safely read the properties from the store to prevent desync type compilation errors
   const activeCountry = store.activeCountry;
   const globalDataCache = store.globalDataCache || {};
 
-  // Safely resolve the score for the chosen territory from the cache, or default to 60
   let currentScore = 60;
-  if (activeCountry && typeof activeCountry === 'object' && activeCountry.code) {
-    const cachedEntry = globalDataCache[activeCountry.code.toUpperCase()];
-    if (cachedEntry && typeof cachedEntry === 'object') {
-      currentScore = (cachedEntry as any).healthScore ?? (cachedEntry as any).score ?? 60;
+  if (activeCountry) {
+    // Universal extraction handling whether store value is a string or a structured object
+    const codeKey = typeof activeCountry === 'string' 
+      ? activeCountry.toUpperCase() 
+      : (activeCountry.code || activeCountry.id || "").toUpperCase();
+
+    if (codeKey && globalDataCache[codeKey]) {
+      const cachedEntry = globalDataCache[codeKey];
+      currentScore = cachedEntry.healthScore ?? cachedEntry.score ?? 60;
     }
   }
 
@@ -52,13 +55,13 @@ export default function MacroHealthPage() {
         </div>
       </div>
 
-      {/* 🔮 SLIDING CONTEXT INTEL DRAWER PANEL CONTAINER */}
+      {/* SLIDING CONTEXT INTEL DRAWER PANEL CONTAINER */}
       <AIAnalysisPanel />
 
       {/* LOWER NOTIFICATION BAR WIDGET */}
       <div className="absolute bottom-4 left-6 z-40 bg-slate-900/80 border border-slate-800 backdrop-blur-md px-4 py-2.5 rounded-xl max-w-sm shadow-xl flex items-center space-x-3 text-[11px] font-mono font-medium text-slate-400">
         <Globe className="w-4 h-4 text-emerald-400 animate-spin-slow shrink-0" />
-        <span>Click on any illuminated country border matrix element to reveal macro debt indexes.</span>
+        <span>Click on any country element to view localized economic health indices.</span>
       </div>
 
     </div>
