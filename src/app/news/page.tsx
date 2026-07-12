@@ -14,11 +14,10 @@ interface LiveArticle {
 }
 
 export default function GlobalHistoricalAndNewsTerminal() {
-  // 🚀 CUSTOM FIX: Use an explicit, local component state tracking property to bypass store key desync issues entirely!
+  // Local state tracking to prevent global desync issues across client viewports
   const [activeSegmentToggle, setActiveSegmentToggle] = useState<'gdp' | 'macro' | 'inflation' | 'workforce'>('gdp');
   const [liveNews, setLiveNews] = useState<LiveArticle[]>([]);
 
-  // Safely grab the global store to make sure core handlers don't throw errors
   const store = useEconomyStore();
 
   useEffect(() => {
@@ -70,8 +69,8 @@ export default function GlobalHistoricalAndNewsTerminal() {
   ];
 
   return (
-    // 🛠️ BOOTSTRAP FIX 1: Enhanced structural padding rules (pt-24 pb-6) to drop content safely below fixed HUD bars
-    <div className="w-full min-h-screen bg-slate-950 px-4 md:px-6 pb-6 pt-24 text-slate-100 font-sans flex flex-col overflow-x-hidden select-none">
+    // 🛠️ MOBILE SCREEN OPTIMIZATION: Replaced dynamic margins with explicit, safe padding coordinates to prevent navigation bar cuts
+    <div className="w-full min-h-screen bg-slate-950 px-4 md:px-6 pb-8 pt-24 text-slate-100 font-sans flex flex-col overflow-x-hidden select-none">
       <div className="w-full max-w-7xl mx-auto flex flex-col space-y-4 flex-1">
         
         {/* 🎛️ CONTROL HEADER PANEL */}
@@ -92,12 +91,12 @@ export default function GlobalHistoricalAndNewsTerminal() {
         </div>
 
         {/* 💻 MAIN SPLIT WORKSPACE WINDOW */}
-        {/* 🛠️ BOOTSTRAP FIX 2: Dynamic flex alignment (flex-col -> lg:flex-row) shifts layouts cleanly between screens */}
+        {/* Responsive Flex Rules: Stacks component containers vertically on phone viewports (flex-col) and spreads out side-by-side on monitors (lg:flex-row) */}
         <div className="flex-1 flex flex-col lg:flex-row space-y-5 lg:space-y-0 lg:space-x-4 min-h-0 w-full items-stretch">
           
           {/* 📊 LEFT BLOCK: TIME-SERIES ENGINE */}
-          {/* 🛠️ BOOTSTRAP FIX 3: Replaced hard limits with safe scaling parameters (h-[420px] -> lg:h-auto) to allow perfect graph expansion */}
-          <div className="w-full lg:w-[60%] bg-slate-900/60 border border-slate-800/80 rounded-xl p-4 shadow-2xl h-[420px] sm:h-[480px] lg:h-auto flex flex-col justify-between overflow-hidden">
+          {/* Height scales dynamically (h-[400px] on mobile to h-auto on large layouts) to eliminate overlapping layout blocks */}
+          <div className="w-full lg:w-[60%] bg-slate-900/60 border border-slate-800/80 rounded-xl p-4 shadow-2xl h-[400px] sm:h-[460px] lg:h-auto flex flex-col justify-between overflow-hidden">
             
             <div className="flex-1 min-h-0 w-full relative">
               <GlobalChart overrideToggle={activeSegmentToggle} />
@@ -109,7 +108,7 @@ export default function GlobalHistoricalAndNewsTerminal() {
                 ⚙️ SELECT SYSTEM TIME-SERIES DATASET TRAJECTORY:
               </span>
               
-              {/* 🛠️ BOOTSTRAP FIX 4: Upgraded grid to adapt gracefully to smartphone aspect boundaries (grid-cols-1 -> sm:grid-cols-2 -> md:grid-cols-4) */}
+              {/* Upgraded grid columns map fluidly onto smaller phone touch borders to avoid cramped text metrics */}
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2">
                 {datasetToggles.map((toggle) => {
                   const Icon = toggle.icon;
@@ -136,8 +135,8 @@ export default function GlobalHistoricalAndNewsTerminal() {
           </div>
 
           {/* 📡 RIGHT BLOCK: DEEP LIVE NEWS STREAM CARD */}
-          {/* 🛠️ BOOTSTRAP FIX 5: Standardized standalone mobile news layout engine to prevent panel clip overlaps */}
-          <div className="w-full lg:w-[40%] bg-slate-900/40 border border-slate-800/50 rounded-xl p-4 shadow-2xl h-[400px] sm:h-[450px] lg:h-auto flex flex-col overflow-hidden">
+          {/* Height is standardized explicitly for mobile viewports (h-[380px]) with independent container scroll tracking to protect view visibility */}
+          <div className="w-full lg:w-[40%] bg-slate-900/40 border border-slate-800/50 rounded-xl p-4 shadow-2xl h-[380px] sm:h-[420px] lg:h-auto flex flex-col overflow-hidden">
             <div className="flex items-center justify-between border-b border-slate-850 pb-2.5 shrink-0">
               <div className="flex items-center space-x-2 text-[10px] font-mono font-bold tracking-wider text-rose-400 uppercase">
                 <Radio className="w-3.5 h-3.5 animate-pulse text-rose-500" />
