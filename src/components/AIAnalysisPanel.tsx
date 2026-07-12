@@ -25,10 +25,9 @@ const countryNameMap: Record<string, string> = {
 export default function AIAnalysisPanel() {
   const { activeCountry, globalDataCache, setActiveCountry } = useEconomyStore();
 
-  // 🛡️ UNIVERSAL DATA INTERCEPTOR DEFIANT GUARD
+  // 🛡️ Guard 1: Panel stays hidden if no country is selected
   if (!activeCountry) return null;
 
-  // Extract code safely whether activeCountry is a plain string or a complex nested object
   let countryCode = "";
   if (typeof activeCountry === 'string') {
     countryCode = activeCountry;
@@ -36,13 +35,24 @@ export default function AIAnalysisPanel() {
     countryCode = activeCountry.code || activeCountry.id || activeCountry.iso3 || "";
   }
 
-  // Ensure it's a valid string key to read custom seed variations
+  // 🛡️ Guard 2: Make sure we have a valid code string
   if (!countryCode || countryCode.length < 2) return null;
   
   countryCode = countryCode.toUpperCase();
   const resolvedName = countryNameMap[countryCode] || activeCountry.name || `Nation Cluster (${countryCode})`;
 
   const report = generateMacroAIReport(countryCode, resolvedName, globalDataCache);
+
+  // 🛡️ Guard 3: Fallback object if report structure is missing properties
+  const marketIndexes = report?.marketIndexes || {
+    interestRate: "N/A",
+    liveCurrencyRate: "N/A",
+    liveStockIndex: "N/A",
+    currencyTrend: "N/A",
+    riskPremium: "N/A"
+  };
+
+  const stockIndexText = marketIndexes.liveStockIndex || "N/A";
 
   return (
     <div className="absolute top-0 right-0 z-50 h-screen w-96 bg-slate-900/95 border-l border-slate-800 shadow-2xl backdrop-blur-md flex flex-col justify-between animate-slide-in select-none">
@@ -74,44 +84,11 @@ export default function AIAnalysisPanel() {
             </span>
           </h2>
           <span className="inline-block mt-2 text-[9px] font-mono font-bold px-2 py-0.5 rounded bg-slate-950 border border-slate-800 text-slate-400 tracking-wider uppercase">
-            ⚡ STATUS: {report.status}
+            ⚡ STATUS: {report?.status || "STABLE PROFILE AXIS"}
           </span>
         </div>
 
         {/* ACTIVE FINANCIAL INDEXES CARD */}
-        
-<div className="grid grid-cols-1 gap-2 text-[11px] font-mono">
-  <div className="flex justify-between items-center p-2 bg-slate-900 border border-slate-800/40 rounded">
-    <span className="text-slate-500">Implied Central Bank Rate:</span>
-    <span className="text-amber-400 font-bold">{report.marketIndexes.interestRate}</span>
-  </div>
-  
-  <div className="flex justify-between items-center p-2 bg-slate-900 border border-slate-800/40 rounded">
-    <span className="text-slate-500">Live Currency Rate:</span>
-    <span className="text-emerald-400 font-bold tracking-wide">{report.marketIndexes.liveCurrencyRate}</span>
-  </div>
-
-  {/* 🚀 THE STOCK MARKET INDEX HOOK ROW INJECTION */}
-  <div className="flex justify-between items-center p-2 bg-slate-900 border border-slate-800/40 rounded">
-    <span className="text-slate-500">Live Stock Market Index:</span>
-    <span className={`font-bold tracking-wide ${
-      report.marketIndexes.liveStockIndex.includes('-') ? 'text-rose-400' : 'text-cyan-400'
-    }`}>
-      {report.marketIndexes.liveStockIndex}
-    </span>
-  </div>
-
-  <div className="flex justify-between items-center p-2 bg-slate-900 border border-slate-800/40 rounded">
-    <span className="text-slate-500">Local Currency Trend:</span>
-    <span className="text-indigo-400 font-bold">{report.marketIndexes.currencyTrend}</span>
-  </div>
-  <div className="flex justify-between items-center p-2 bg-slate-900 border border-slate-800/40 rounded">
-    <span className="text-slate-500">Sovereign Debt Risk Premium:</span>
-    <span className="text-slate-300 font-bold">{report.marketIndexes.riskPremium}</span>
-  </div>
-</div>
-
-
         <div className="bg-slate-950/60 border border-slate-850 p-3.5 rounded-xl space-y-2.5 shadow-inner">
           <div className="flex items-center space-x-1 text-[10px] font-mono font-bold tracking-wider text-amber-400 uppercase">
             <Landmark className="w-3.5 h-3.5" />
@@ -121,21 +98,31 @@ export default function AIAnalysisPanel() {
           <div className="grid grid-cols-1 gap-2 text-[11px] font-mono">
             <div className="flex justify-between items-center p-2 bg-slate-900 border border-slate-800/40 rounded">
               <span className="text-slate-500">Implied Central Bank Rate:</span>
-              <span className="text-amber-400 font-bold">{report.marketIndexes.interestRate}</span>
+              <span className="text-amber-400 font-bold">{marketIndexes.interestRate}</span>
             </div>
             
             <div className="flex justify-between items-center p-2 bg-slate-900 border border-slate-800/40 rounded">
               <span className="text-slate-500">Live Currency Rate:</span>
-              <span className="text-emerald-400 font-bold tracking-wide">{report.marketIndexes.liveCurrencyRate}</span>
+              <span className="text-emerald-400 font-bold tracking-wide">{marketIndexes.liveCurrencyRate}</span>
+            </div>
+
+            {/* 🛡️ FIXED SAFE COLOR CHECK FOR STOCK MARKET ROWS */}
+            <div className="flex justify-between items-center p-2 bg-slate-900 border border-slate-800/40 rounded">
+              <span className="text-slate-500">Live Stock Market Index:</span>
+              <span className={`font-bold tracking-wide ${
+                stockIndexText.includes('-') ? 'text-rose-400' : 'text-cyan-400'
+              }`}>
+                {stockIndexText}
+              </span>
             </div>
 
             <div className="flex justify-between items-center p-2 bg-slate-900 border border-slate-800/40 rounded">
               <span className="text-slate-500">Local Currency Trend:</span>
-              <span className="text-indigo-400 font-bold">{report.marketIndexes.currencyTrend}</span>
+              <span className="text-indigo-400 font-bold">{marketIndexes.currencyTrend}</span>
             </div>
             <div className="flex justify-between items-center p-2 bg-slate-900 border border-slate-800/40 rounded">
               <span className="text-slate-500">Sovereign Debt Risk Premium:</span>
-              <span className="text-slate-300 font-bold">{report.marketIndexes.riskPremium}</span>
+              <span className="text-slate-300 font-bold">{marketIndexes.riskPremium}</span>
             </div>
           </div>
         </div>
@@ -147,7 +134,7 @@ export default function AIAnalysisPanel() {
               <BarChart3 className="w-3.5 h-3.5 text-indigo-400" />
               <span>1. Localized Situation Profile</span>
             </h4>
-            <p className="text-[11px] text-slate-300 leading-relaxed font-sans">{report.situation}</p>
+            <p className="text-[11px] text-slate-300 leading-relaxed font-sans">{report?.situation}</p>
           </div>
 
           <div className="space-y-1">
@@ -155,7 +142,7 @@ export default function AIAnalysisPanel() {
               <Radio className="w-3.5 h-3.5 text-emerald-400" />
               <span>2. Underlying Context Matrix</span>
             </h4>
-            <p className="text-[11px] text-slate-300 leading-relaxed font-sans">{report.why}</p>
+            <p className="text-[11px] text-slate-300 leading-relaxed font-sans">{report?.why}</p>
           </div>
 
           <div className="space-y-1">
@@ -163,7 +150,7 @@ export default function AIAnalysisPanel() {
               <ShieldAlert className="w-3.5 h-3.5 text-rose-400" />
               <span>3. Primary Vulnerability Node</span>
             </h4>
-            <p className="text-[11px] text-slate-300 leading-relaxed font-sans">{report.vulnerability}</p>
+            <p className="text-[11px] text-slate-300 leading-relaxed font-sans">{report?.vulnerability}</p>
           </div>
         </div>
 
