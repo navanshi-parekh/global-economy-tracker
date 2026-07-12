@@ -70,11 +70,12 @@ export default function GlobalHistoricalAndNewsTerminal() {
   ];
 
   return (
-    <div className="w-screen h-screen bg-slate-950 px-6 pb-6 pt-24 text-slate-100 font-sans flex flex-col overflow-hidden select-none">
-      <div className="w-full h-full flex flex-col space-y-4">
+    // 🛠️ BOOTSTRAP FIX 1: Replaced rigid h-screen/w-screen with mobile-friendly min-h-screen/w-full to stop view blocking [cite: 2079]
+    <div className="w-full min-h-screen bg-slate-950 px-4 md:px-6 pb-6 pt-24 text-slate-100 font-sans flex flex-col overflow-x-hidden select-none">
+      <div className="w-full max-w-7xl mx-auto flex flex-col space-y-4 flex-1">
         
         {/* 🎛️ CONTROL HEADER PANEL */}
-        <div className="flex justify-between items-center border-b border-slate-800 pb-3 shrink-0">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 border-b border-slate-800 pb-3 shrink-0">
           <div className="flex items-center space-x-3">
             <div className="p-2 bg-indigo-500/10 border border-indigo-500/20 rounded-xl text-indigo-400">
               <Terminal className="w-4 h-4" />
@@ -84,17 +85,19 @@ export default function GlobalHistoricalAndNewsTerminal() {
               <p className="text-[10px] text-slate-400 font-mono">Decoupled Architecture Terminal // Multi-Stream News Extraction Matrix</p>
             </div>
           </div>
-          <Link href="/" className="flex items-center space-x-1 font-mono text-[10px] bg-slate-900 border border-slate-800 px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-indigo-400 hover:border-indigo-500/30 transition-all">
+          <Link href="/" className="self-start sm:self-auto flex items-center space-x-1 font-mono text-[10px] bg-slate-900 border border-slate-800 px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-indigo-400 hover:border-indigo-500/30 transition-all">
             <ArrowLeft className="w-3 h-3" />
             <span>RETURN TO MAIN MAP</span>
           </Link>
         </div>
 
         {/* 💻 MAIN SPLIT WORKSPACE WINDOW */}
-        <div className="flex-1 flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4 min-h-0 overflow-y-auto lg:overflow-hidden w-full">
+        {/* 🛠️ BOOTSTRAP FIX 2: Added flex-col for mobile vertical stacking and lg:flex-row to space out side-by-side on monitors [cite: 2076, 2077] */}
+        <div className="flex-1 flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4 min-h-0 w-full items-stretch">
           
           {/* 📊 LEFT BLOCK: TIME-SERIES ENGINE */}
-          <div className="w-full lg:w-[60%] bg-slate-900/60 border border-slate-800/80 rounded-xl p-4 shadow-2xl h-[450px] lg:h-full flex flex-col justify-between overflow-hidden shrink-0 lg:shrink">
+          {/* 🛠️ BOOTSTRAP FIX 3: Set legible proportional heights (h-[380px] sm:h-[450px]) on mobile, passing back to lg:h-full on large monitors [cite: 2076] */}
+          <div className="w-full lg:w-[60%] bg-slate-900/60 border border-slate-800/80 rounded-xl p-4 shadow-2xl h-[380px] sm:h-[450px] lg:h-auto flex flex-col justify-between overflow-hidden">
             
             <div className="flex-1 min-h-0">
               <GlobalChart overrideToggle={activeSegmentToggle} />
@@ -105,6 +108,7 @@ export default function GlobalHistoricalAndNewsTerminal() {
               <span className="text-[9px] font-mono font-bold tracking-widest text-slate-500 block mb-2 uppercase">
                 ⚙️ SELECT SYSTEM TIME-SERIES DATASET TRAJECTORY:
               </span>
+              {/* 🛠️ BOOTSTRAP FIX 4: Upgraded the button layouts to dynamically scale columns (grid-cols-2 to sm:grid-cols-4) matching handheld constraints [cite: 2080] */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {datasetToggles.map((toggle) => {
                   const Icon = toggle.icon;
@@ -131,7 +135,8 @@ export default function GlobalHistoricalAndNewsTerminal() {
           </div>
 
           {/* 📡 RIGHT BLOCK: DEEP LIVE NEWS STREAM CARD */}
-          <div className="w-full lg:w-[40%] bg-slate-900/40 border border-slate-800/50 rounded-xl p-4 shadow-2xl h-[400px] lg:h-full flex flex-col overflow-hidden shrink-0 lg:shrink">
+          {/* 🛠️ BOOTSTRAP FIX 5: Standardized mobile text box bounds (h-[400px] to lg:h-auto) and enabled independent view container scrolling [cite: 2076, 2080] */}
+          <div className="w-full lg:w-[40%] bg-slate-900/40 border border-slate-800/50 rounded-xl p-4 shadow-2xl h-[400px] lg:h-auto flex flex-col overflow-hidden">
             <div className="flex items-center justify-between border-b border-slate-850 pb-2.5 shrink-0">
               <div className="flex items-center space-x-2 text-[10px] font-mono font-bold tracking-wider text-rose-400 uppercase">
                 <Radio className="w-3.5 h-3.5 animate-pulse text-rose-500" />
