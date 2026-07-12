@@ -59,9 +59,20 @@ export const numericToIso3: Record<string, string> = {
   "894": "ZMB", "716": "ZWE", "426": "LSO",
 
   // --- OCEANIA ---
-  "036": "AUS", "554": "NZL", "242": "FJI", "598": "PNG", "090": "SLB",
-  "548": "VUT", "882": "WSM", "776": "TON", "296": "KIR", "584": "MHL", 
-  "583": "FSM", "585": "PLW", "258": "PYF"
+  // --- OCEANIA ---
+  "036": "AUS", 
+  "554": "NZL",  
+  "598": "PNG", 
+  "090": "SLB",
+  "548": "VUT", 
+  "882": "WSM", 
+  "776": "TON", 
+  "296": "KIR", 
+  "584": "MHL",
+  "583": "FSM", 
+  "585": "PLW", 
+  "258": "PYF"
+
 };
 
 export function convertNumericToIso3(numericId: string | number | undefined): string {
