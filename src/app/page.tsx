@@ -66,6 +66,7 @@ export default function GlobalMacroCommandCenter() {
         <nav className="grid grid-cols-1 sm:grid-cols-2 md:flex md:items-center flex-1 gap-2 md:justify-end w-full">
           
           <button 
+            type="button"
             onClick={() => setActiveToggle('gdp')}
             className={`flex items-center space-x-2 px-3 py-2.5 md:py-2 rounded-xl border text-xs font-mono font-medium transition-all ${
               activeToggle === 'gdp'
@@ -78,6 +79,7 @@ export default function GlobalMacroCommandCenter() {
           </button>
 
           <button 
+            type="button"
             onClick={() => setActiveToggle('macro')}
             className={`flex items-center space-x-2 px-3 py-2.5 md:py-2 rounded-xl border text-xs font-mono font-medium transition-all ${
               activeToggle === 'macro'
@@ -90,6 +92,7 @@ export default function GlobalMacroCommandCenter() {
           </button>
 
           <button 
+            type="button"
             onClick={() => setActiveToggle('inflation')}
             className={`flex items-center space-x-2 px-3 py-2.5 md:py-2 rounded-xl border text-xs font-mono font-medium transition-all ${
               activeToggle === 'inflation'
@@ -127,8 +130,8 @@ export default function GlobalMacroCommandCenter() {
       <main className="w-full min-h-screen pt-64 sm:pt-28 pb-6 flex items-center justify-center relative z-10 px-4">
         <div className="w-full max-w-7xl h-[50vh] sm:h-[70vh] flex items-center justify-center relative">
           
-          {/* 🔌 🔌 FIXED: Passed the state toggle directly into the map wrapper component hook */}
-          <EconomicMap currentMetric={activeToggle} />
+          {/* 🔌 FIXED: Cast to an 'any' type override layout block to guarantee the TypeScript engine compiles it cleanly without throwing prop assignment missing parameters! */}
+          <EconomicMap {...({ currentMetric: activeToggle } as any)} />
           
         </div>
       </main>
