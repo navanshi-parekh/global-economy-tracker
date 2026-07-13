@@ -1,6 +1,8 @@
 import React from 'react';
 import './globals.css';
-import { Inter } from 'next/font-family'; // Or your baseline font config
+import { Inter } from 'next/font/google'; // 🔓 FIXED: Changed from 'next/font-family' to 'next/font/google'
+
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
   title: 'Global Macro Command Center',
@@ -14,8 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="h-auto min-h-screen bg-[#05070c]">
-      {/* 🔓 REMOVED h-screen LOCKS: Allowed body framework to naturally stretch h-auto */}
-      <body className="h-auto min-h-screen bg-[#05070c] antialiased text-slate-100 overflow-x-hidden overflow-y-auto selection:bg-indigo-500/30">
+      <body className={`${inter.className} h-auto min-h-screen bg-[#05070c] antialiased text-slate-100 overflow-x-hidden overflow-y-auto`}>
         <main className="w-full h-auto min-h-screen flex flex-col">
           {children}
         </main>
