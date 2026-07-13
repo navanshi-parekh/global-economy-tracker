@@ -53,11 +53,11 @@ export default function GlobalHistoricalAndNewsTerminal() {
   ];
 
   return (
-    /* 🔓 FIX: Swapped out rigid viewport lock flags for min-h-screen and enabled dynamic overflow-y-auto to restore native phone scrolling instantly! */
-    <div className="min-h-screen w-full bg-[#05070c] text-slate-100 font-mono p-4 md:p-6 lg:p-8 flex flex-col space-y-4 overflow-x-hidden overflow-y-auto">
+    /* 🔓 FIX 1: Dropped fixed height locks completely. Changed parent container to a fluid height with auto overflow to unlock natural browser window mobile touch scrolling! */
+    <div className="h-auto min-h-screen w-full bg-[#05070c] text-slate-100 font-mono p-4 md:p-6 lg:p-8 flex flex-col space-y-4 overflow-y-auto overflow-x-hidden">
       
       {/* 🎛️ CONTROL HEADER PANEL */}
-      <div className="w-full flex flex-col md:flex-row md:items-center md:justify-between border border-slate-800 bg-slate-950/60 rounded-xl p-4 gap-4 backdrop-blur-md">
+      <div className="w-full flex flex-col md:flex-row md:items-center md:justify-between border border-slate-800 bg-slate-950/60 rounded-xl p-4 gap-4 backdrop-blur-md flex-shrink-0">
         <div>
           <div className="flex items-center space-x-2 text-indigo-400 font-bold tracking-widest text-sm uppercase">
             <Radio className="w-4 h-4 animate-pulse text-rose-500" />
@@ -69,18 +69,19 @@ export default function GlobalHistoricalAndNewsTerminal() {
         </div>
         <Link 
           href="/"
-          className="flex items-center justify-center space-x-2 px-4 py-2 bg-slate-900 border border-slate-800 hover:border-indigo-500/50 hover:text-white rounded-lg transition-all text-xs text-slate-400"
+          className="flex items-center justify-center space-x-2 px-4 py-2 bg-slate-900 border border-slate-800 hover:border-indigo-500/50 hover:text-white rounded-lg transition-all text-xs text-slate-400 self-start md:self-auto"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>RETURN TO MAIN MAP</span>
         </Link>
       </div>
 
-      {/* 💻 MAIN RESPONSIVE WORKSPACE MATRIX */}
-      <div className="w-full flex flex-col lg:flex-row gap-6 items-stretch">
+      {/* 💻 MAIN RESPONSIVE WORKSPACE LAYER */}
+      {/* 🔓 FIX 2: Swapped desktop flex layout rules. Stacks completely naturally into structural columns on handheld viewports instead of pinching boxes, matching screen parameters. */}
+      <div className="w-full flex flex-col lg:flex-row gap-6 items-stretch flex-grow h-auto">
         
         {/* 📊 LEFT COLUMN: TIME-SERIES GRAPH LAYER */}
-        <div className="w-full lg:w-[60%] flex flex-col border border-slate-800 bg-slate-950/40 rounded-xl p-4 space-y-4">
+        <div className="w-full lg:w-[60%] flex flex-col border border-slate-800 bg-slate-950/40 rounded-xl p-4 space-y-4 h-auto">
           
           <div className="space-y-2">
             <label className="text-[10px] font-bold text-slate-500 tracking-wider uppercase flex items-center space-x-1">
@@ -108,20 +109,22 @@ export default function GlobalHistoricalAndNewsTerminal() {
             </div>
           </div>
 
-          {/* Chart View Container */}
-          <div className="w-full bg-slate-950/80 rounded-xl border border-slate-900/60 relative overflow-hidden h-[340px] sm:h-[420px] lg:h-[500px]">
+          {/* 📈 Graph Container View Box */}
+          {/* 🔓 FIX 3: Set precise responsive dimensions. Stays structurally framed at 350px on phones so vectors have room, expanding cleanly to full workspace proportions on monitors. */}
+          <div className="w-full bg-slate-950/80 rounded-xl border border-slate-900/60 relative overflow-hidden h-[350px] sm:h-[420px] lg:h-[520px] min-h-[350px] flex-shrink-0">
             <GlobalChart overrideToggle={activeSegmentToggle} />
           </div>
 
-          <div className="w-full p-3 rounded-lg bg-slate-950 border border-slate-900 flex items-center justify-between text-xs">
+          <div className="w-full p-3 rounded-lg bg-slate-950 border border-slate-900 flex items-center justify-between text-xs flex-shrink-0">
             <span className="text-slate-500 font-medium">Benchmark Year Parameters:</span>
             <span className="text-indigo-400 font-bold bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded">2020 Fixed Baseline</span>
           </div>
         </div>
 
         {/* 📰 RIGHT COLUMN: REAL-TIME STREAMING TERMINAL FEED */}
-        <div className="w-full lg:w-[40%] flex flex-col border border-slate-800 bg-slate-950/40 rounded-xl p-4 space-y-4 min-h-[400px]">
-          <div className="flex items-center justify-between border-b border-slate-900 pb-3">
+        {/* 🔓 FIX 4: Reconfigured structural parameters to drop strict height blocks on mobile viewports so that it streams cleanly right beneath the chart element sequence without cutoff lines. */}
+        <div className="w-full lg:w-[40%] flex flex-col border border-slate-800 bg-slate-950/40 rounded-xl p-4 space-y-4 h-auto min-h-[380px]">
+          <div className="flex items-center justify-between border-b border-slate-900 pb-3 flex-shrink-0">
             <div className="flex items-center space-x-2">
               <Terminal className="w-4 h-4 text-emerald-400" />
               <h2 className="text-sm font-bold text-white tracking-wider uppercase">Live Feed Filter</h2>
@@ -132,8 +135,8 @@ export default function GlobalHistoricalAndNewsTerminal() {
             </div>
           </div>
 
-          {/* Scrolling News Grid Box */}
-          <div className="space-y-3 custom-scrollbar">
+          {/* Scrolling News Stream Grid Panel */}
+          <div className="flex-grow space-y-3 custom-scrollbar h-auto lg:overflow-y-auto lg:max-h-[580px]">
             {liveNews.map((article, index) => (
               <a
                 key={index}
