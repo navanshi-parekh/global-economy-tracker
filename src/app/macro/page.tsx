@@ -8,7 +8,7 @@ import { Map, Activity, TrendingUp, Terminal, Radio } from 'lucide-react';
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
-  const { activeMetric, setActiveMetric } = useEconomyStore();
+  const [activeMetric, setActiveMetric] = useState<string>('macro');
 
   // Prevent server-side hydration time desync errors
   useEffect(() => {
