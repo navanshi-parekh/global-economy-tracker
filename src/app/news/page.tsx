@@ -53,7 +53,7 @@ export default function GlobalHistoricalAndNewsTerminal() {
   ];
 
   return (
-    /* 🔓 FIX 1: Dropped fixed height locks completely. Changed parent container to a fluid height with auto overflow to unlock natural browser window mobile touch scrolling! */
+    /* 🔓 SCROLL RESOLVED: h-auto guarantees that browser window layout container adapts directly to mobile vertical stacking content! */
     <div className="h-auto min-h-screen w-full bg-[#05070c] text-slate-100 font-mono p-4 md:p-6 lg:p-8 flex flex-col space-y-4 overflow-y-auto overflow-x-hidden">
       
       {/* 🎛️ CONTROL HEADER PANEL */}
@@ -76,8 +76,7 @@ export default function GlobalHistoricalAndNewsTerminal() {
         </Link>
       </div>
 
-      {/* 💻 MAIN RESPONSIVE WORKSPACE LAYER */}
-      {/* 🔓 FIX 2: Swapped desktop flex layout rules. Stacks completely naturally into structural columns on handheld viewports instead of pinching boxes, matching screen parameters. */}
+      {/* 💻 MAIN RESPONSIVE WORKSPACE GRID */}
       <div className="w-full flex flex-col lg:flex-row gap-6 items-stretch flex-grow h-auto">
         
         {/* 📊 LEFT COLUMN: TIME-SERIES GRAPH LAYER */}
@@ -109,9 +108,8 @@ export default function GlobalHistoricalAndNewsTerminal() {
             </div>
           </div>
 
-          {/* 📈 Graph Container View Box */}
-          {/* 🔓 FIX 3: Set precise responsive dimensions. Stays structurally framed at 350px on phones so vectors have room, expanding cleanly to full workspace proportions on monitors. */}
-          <div className="w-full bg-slate-950/80 rounded-xl border border-slate-900/60 relative overflow-hidden h-[350px] sm:h-[420px] lg:h-[520px] min-h-[350px] flex-shrink-0">
+          {/* 📈 Vector Chart Container Box */}
+          <div className="w-full bg-slate-950/80 rounded-xl border border-slate-900/60 relative overflow-hidden h-[340px] sm:h-[420px] lg:h-[500px] min-h-[340px] flex-shrink-0">
             <GlobalChart overrideToggle={activeSegmentToggle} />
           </div>
 
@@ -122,7 +120,6 @@ export default function GlobalHistoricalAndNewsTerminal() {
         </div>
 
         {/* 📰 RIGHT COLUMN: REAL-TIME STREAMING TERMINAL FEED */}
-        {/* 🔓 FIX 4: Reconfigured structural parameters to drop strict height blocks on mobile viewports so that it streams cleanly right beneath the chart element sequence without cutoff lines. */}
         <div className="w-full lg:w-[40%] flex flex-col border border-slate-800 bg-slate-950/40 rounded-xl p-4 space-y-4 h-auto min-h-[380px]">
           <div className="flex items-center justify-between border-b border-slate-900 pb-3 flex-shrink-0">
             <div className="flex items-center space-x-2">
@@ -135,8 +132,8 @@ export default function GlobalHistoricalAndNewsTerminal() {
             </div>
           </div>
 
-          {/* Scrolling News Stream Grid Panel */}
-          <div className="flex-grow space-y-3 custom-scrollbar h-auto lg:overflow-y-auto lg:max-h-[580px]">
+          {/* Scrolling News Stream Panel */}
+          <div className="space-y-3 custom-scrollbar h-auto lg:overflow-y-auto lg:max-h-[580px]">
             {liveNews.map((article, index) => (
               <a
                 key={index}
