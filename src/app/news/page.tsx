@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import GlobalChart from '../../components/GlobalChart';
 import { useEconomyStore } from '../../store/useEconomyStore';
-import { Radio, Terminal, ArrowLeft, Clock, Activity, TrendingUp, Users, BarChart3 } from 'lucide-react';
+import { Radio, Terminal, ArrowLeft, Clock, Activity, TrendingUp, Users, BarChart3, ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 
 interface LiveArticle {
