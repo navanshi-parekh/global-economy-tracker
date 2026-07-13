@@ -53,9 +53,12 @@ export default function GlobalHistoricalAndNewsTerminal() {
   ];
 
   return (
-    /* 🔓 SCROLL RESOLVED: h-auto guarantees that browser window layout container adapts directly to mobile vertical stacking content! */
-    <div className="h-auto min-h-screen w-full bg-[#05070c] text-slate-100 font-mono p-4 md:p-6 lg:p-8 flex flex-col space-y-4 overflow-y-auto overflow-x-hidden">
-      
+  /* 🔓 DIRECT STYLE OVERRIDE: Inline parameters act as an ironclad safety valve against CSS inheritance traps */
+  <div 
+    style={{ overflowY: 'auto', height: 'auto', WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}
+    className="min-h-screen w-full bg-[#05070c] text-slate-100 font-mono p-4 md:p-6 lg:p-8 flex flex-col space-y-4 overflow-x-hidden"
+  >
+    
       {/* 🎛️ CONTROL HEADER PANEL */}
       <div className="w-full flex flex-col md:flex-row md:items-center md:justify-between border border-slate-800 bg-slate-950/60 rounded-xl p-4 gap-4 backdrop-blur-md flex-shrink-0">
         <div>
