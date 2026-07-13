@@ -16,11 +16,21 @@ interface TooltipState {
   data: LiveCountryData | null;
 }
 
-export default function EconomicMap() {
+// 🚀 CORE FIX 1: Explicitly declare the prop interface signature to capture home layout values
+interface EconomicMapProps {
+  overrideToggle?: 'gdp' | 'macro' | 'inflation' | 'workforce';
+}
+
+export default function EconomicMap({ overrideToggle }: EconomicMapProps) {
+  // Pull core state management hooks cleanly from the global store
   const { activeGlobalToggle, setActiveCountry, globalDataCache, initializeGlobalCache, isCacheLoading } = useEconomyStore();
   const [tooltip, setTooltip] = useState<TooltipState>({ 
     visible: false, x: 0, y: 0, loading: false, activeId: null, data: null 
   });
+
+  // 🚀 CORE FIX 2: Compute the runtime configuration fallback token dynamically
+  // If the parent page passes overrideToggle, use it. Otherwise, look for activeGlobalToggle.
+  const activeLens = overrideToggle || activeGlobalToggle || 'gdp';
 
   useEffect(() => {
     initializeGlobalCache();
@@ -32,26 +42,28 @@ export default function EconomicMap() {
     const countryData = globalDataCache[iso3];
     if (!countryData || iso3 === 'WLD') return '#1e293b'; 
 
-    if (activeGlobalToggle === 'macro') {
+    // 🚀 CORE FIX 3: Update coloring conditional evaluations to match activeLens instead of a static store field
+    if (activeLens === 'macro') {
       const score = countryData.healthScore;
       if (score > 65) return '#059669'; 
       if (score > 45) return '#d97706'; 
       return '#dc2626'; 
     }
     
-    if (activeGlobalToggle === 'inflation') {
+    if (activeLens === 'inflation') {
       const inf = countryData.inflation;
       if (inf > 6.0) return '#b91c1c'; 
       if (inf > 3.0) return '#ea580c'; 
       return '#0891b2'; 
     }
 
-    if (activeGlobalToggle === 'workforce') {
+    if (activeLens === 'workforce') {
       const unemp = countryData.unemployment;
       return unemp > 6.0 ? '#be123c' : '#10b981';
     }
 
-    return '#334155';
+    // Default: 'gdp' mode shading baseline style code coordinates
+    return '#d97706'; 
   };
 
   const handleMouseEnter = async (e: React.MouseEvent, geo: any, bounds: DOMRect) => {
@@ -151,7 +163,7 @@ export default function EconomicMap() {
             <span className="font-bold text-sm text-slate-100 tracking-wide">
               {tooltip.data.name} ({tooltip.data.code})
             </span>
-            <span className="text-[9px] bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 px-1.5 py-0.5 rounded font-mono font-bold uppercase">{activeGlobalToggle} lens</span>
+            <span className="text-[9px] bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 px-1.5 py-0.5 rounded font-mono font-bold uppercase">{activeLens} lens</span>
           </div>
           
           <div className="space-y-2 font-mono">
