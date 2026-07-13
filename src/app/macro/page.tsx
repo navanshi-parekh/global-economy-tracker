@@ -1,23 +1,21 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useEconomyStore } from '../store/useEconomyStore';
-// 🔓 FIXED 1: Pointed directly to your real geographic component file instead of non-existent paths
-import EconomicMap from '../components/EconomicMap'; 
+// 🔓 FIXED: Swapped out broken relative paths for ironclad absolute root path alias
+import { useEconomyStore } from '@/store/useEconomyStore';
+import EconomicMap from '@/components/EconomicMap'; 
 import { Map, Activity, TrendingUp, Terminal, Radio } from 'lucide-react';
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
-  // 🔌 Connect to your global state store hooks
   const { activeMetric, setActiveMetric } = useEconomyStore();
 
-  // Guard against server/client hydration time desync metrics
+  // Prevent server-side hydration time desync errors
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // 🔓 FIXED 2: Broadcast store transitions straight onto the Document node element 
-  // to completely sidestep strict TypeScript element prop-checking blocking errors!
+  // Broadcast store transitions onto the Document node element 
   useEffect(() => {
     if (mounted && typeof window !== 'undefined') {
       document.documentElement.setAttribute('data-macro-metric', activeMetric || 'gdp');
@@ -25,7 +23,6 @@ export default function Home() {
     }
   }, [activeMetric, mounted]);
 
-  // Unified button mapping properties configuration matrix
   const navigationButtons = [
     { 
       id: 'gdp', 
@@ -54,7 +51,7 @@ export default function Home() {
   return (
     <div className="h-auto min-h-screen w-full bg-[#05070c] text-slate-100 font-mono p-4 md:p-6 lg:p-8 flex flex-col space-y-6 overflow-y-auto overflow-x-hidden">
       
-      {/* 🎛️ GLOBAL COMMAND CONTROL PANEL */}
+      {/* 🎛️ COMMAND PANEL */}
       <div className="w-full flex flex-col md:flex-row md:items-center md:justify-between border border-slate-800 bg-slate-950/60 rounded-xl p-4 gap-4 backdrop-blur-md">
         <div>
           <div className="flex items-center space-x-2 text-indigo-400 font-bold tracking-widest text-sm uppercase">
@@ -67,7 +64,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* 🧭 BUTTON CONTROLLER CONTAINER */}
+      {/* 🧭 NAVIGATION INTERACTION MENU */}
       <div className="w-full border border-slate-800 bg-slate-950/40 rounded-xl p-4 space-y-3">
         <label className="text-[10px] font-bold text-slate-500 tracking-wider uppercase">
           🚀 Select Active Telemetry Layer:
@@ -95,7 +92,6 @@ export default function Home() {
             );
           })}
 
-          {/* 📰 LINKED FINANCIAL TERMINAL BUTTON */}
           <Link
             href="/news"
             className="flex items-center justify-center space-x-2 px-4 py-3 rounded-xl border border-indigo-500/30 bg-indigo-500/5 text-indigo-400 hover:bg-indigo-500/10 hover:text-white hover:border-indigo-500/60 transition-all font-bold text-xs shadow-sm group"
@@ -106,9 +102,8 @@ export default function Home() {
         </div>
       </div>
 
-      {/* 🗺️ INTERACTIVE MAP ENGINE RENDER MATRIX */}
+      {/* 🗺️ INTERACTIVE MAP ENGINE MATRIX */}
       <div className="w-full flex-grow border border-slate-800 bg-slate-950/20 rounded-xl p-4 flex items-center justify-center min-h-[450px] lg:min-h-[600px] relative overflow-hidden">
-        {/* 🔓 FIXED 3: Component renders completely prop-free to bypass compilation blockers instantly */}
         <EconomicMap />
       </div>
 
