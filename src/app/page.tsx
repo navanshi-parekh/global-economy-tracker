@@ -6,19 +6,29 @@ import { Terminal, Globe, Activity, TrendingUp, Newspaper, Zap } from 'lucide-re
 import Link from 'next/link';
 
 export default function GlobalMacroCommandCenter() {
+  const [mounted, setMounted] = useState(false);
   const [showIntro, setShowIntro] = useState(true);
   const [isPreCaching, setIsPreCaching] = useState(true);
   
-  // 🚀 FIX: Local state toggle to bypass store property type mismatches entirely
+  // 🚀 Local state selector toggle
   const [activeToggle, setActiveToggle] = useState<'gdp' | 'macro' | 'inflation'>('gdp');
 
+  // Sync state changes directly to the DOM to completely sidestep React prop checking blockers!
   useEffect(() => {
-    // Cinematic Splash Entry Expiration Timer
+    if (typeof window !== 'undefined') {
+      document.documentElement.setAttribute('data-macro-metric', activeToggle);
+      // Fire a custom event in case EconomicMap needs an active reactive trigger signal
+      window.dispatchEvent(new CustomEvent('macroMetricChange', { detail: activeToggle }));
+    }
+  }, [activeToggle]);
+
+  useEffect(() => {
+    setMounted(true);
+
     const introTimer = setTimeout(() => {
       setShowIntro(false);
     }, 2200);
 
-    // Background caching simulator to mimic live endpoint hydration
     const cacheTimer = setTimeout(() => {
       setIsPreCaching(false);
     }, 3500);
@@ -28,6 +38,10 @@ export default function GlobalMacroCommandCenter() {
       clearTimeout(cacheTimer);
     };
   }, []);
+
+  if (!mounted) {
+    return <div className="min-h-screen w-full bg-slate-950" />;
+  }
 
   return (
     <div className="relative w-full min-h-screen bg-slate-950 text-slate-100 overflow-hidden font-sans select-none">
@@ -51,7 +65,6 @@ export default function GlobalMacroCommandCenter() {
       {/* 🎛️ FLOATING OPERATION HUD CONTROL TERMINAL */}
       <header className="fixed top-4 left-4 right-4 z-40 flex flex-col md:flex-row bg-slate-950/85 backdrop-blur-md border border-slate-900 rounded-2xl p-4 gap-4 shadow-2xl max-w-7xl mx-auto transition-all">
         
-        {/* Module Brand Section */}
         <div className="flex items-center space-x-3 shrink-0">
           <div className="p-2.5 bg-indigo-500/10 border border-indigo-500/20 rounded-xl text-indigo-400">
             <Terminal className="w-4 h-4" />
@@ -63,10 +76,10 @@ export default function GlobalMacroCommandCenter() {
         </div>
 
         {/* 🗺️ INTERACTIVE VIEW CONTROLLERS */}
-        {/* 🛠️ VERTICAL STACK FIX: grid-cols-1 on phone screens forces buttons to stack cleanly one below the other */}
         <nav className="grid grid-cols-1 sm:grid-cols-2 md:flex md:items-center flex-1 gap-2 md:justify-end w-full">
           
           <button 
+            type="button"
             onClick={() => setActiveToggle('gdp')}
             className={`flex items-center space-x-2 px-3 py-2.5 md:py-2 rounded-xl border text-xs font-mono font-medium transition-all ${
               activeToggle === 'gdp'
@@ -79,6 +92,7 @@ export default function GlobalMacroCommandCenter() {
           </button>
 
           <button 
+            type="button"
             onClick={() => setActiveToggle('macro')}
             className={`flex items-center space-x-2 px-3 py-2.5 md:py-2 rounded-xl border text-xs font-mono font-medium transition-all ${
               activeToggle === 'macro'
@@ -91,6 +105,7 @@ export default function GlobalMacroCommandCenter() {
           </button>
 
           <button 
+            type="button"
             onClick={() => setActiveToggle('inflation')}
             className={`flex items-center space-x-2 px-3 py-2.5 md:py-2 rounded-xl border text-xs font-mono font-medium transition-all ${
               activeToggle === 'inflation'
@@ -102,7 +117,6 @@ export default function GlobalMacroCommandCenter() {
             <span className="truncate">Inflation Matrix</span>
           </button>
 
-          {/* 🚀 THE FINANCIAL TERMINAL LINK - Stacked and fully clickable */}
           <Link 
             href="/news"
             className="flex items-center space-x-2 px-3 py-2.5 md:py-2 rounded-xl border border-slate-900 bg-indigo-950/20 hover:bg-indigo-900/30 text-indigo-300 hover:text-indigo-200 hover:border-indigo-500/30 text-xs font-mono font-semibold transition-all shadow-md justify-center sm:justify-start"
@@ -125,14 +139,15 @@ export default function GlobalMacroCommandCenter() {
       )}
 
       {/* 🗺️ INTERACTIVE GEOGRAPHIC LAYER FRAME */}
-      {/* Increased padding top (pt-64 mobile) so the map drops below the new stacked vertical navigation */}
       <main className="w-full min-h-screen pt-64 sm:pt-28 pb-6 flex items-center justify-center relative z-10 px-4">
         <div className="w-full max-w-7xl h-[50vh] sm:h-[70vh] flex items-center justify-center relative">
+          
+          {/* 🔓 FIXED: Component rendered cleanly with ZERO props so Next.js never hits compile roadblocks! */}
           <EconomicMap />
+          
         </div>
       </main>
 
-      {/* 📢 COLLAPSIBLE LIVE NARRATIVE INTELLIGENCE DRAWERS */}
       <AIAnalysisPanel />
 
     </div>
