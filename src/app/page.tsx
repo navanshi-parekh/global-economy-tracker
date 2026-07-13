@@ -2,7 +2,20 @@
 import React, { useState, useEffect } from 'react';
 import EconomicMap from '../components/EconomicMap';
 import AIAnalysisPanel from '../components/AIAnalysisPanel';
-import { Terminal, Globe, Activity, TrendingUp, Newspaper, Zap } from 'lucide-react';
+import { 
+  Radio, 
+  Terminal, 
+  ArrowLeft, 
+  Clock, 
+  ArrowUpRight, 
+  Activity, 
+  TrendingUp, 
+  Users, 
+  BarChart3, 
+  Globe, 
+  Newspaper, 
+  Zap 
+} from 'lucide-react';
 import Link from 'next/link';
 
 export default function GlobalMacroCommandCenter() {

@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 // 🔓 FIXED: Swapped out broken relative paths for ironclad absolute root path alias
-import { useEconomyStore } from '@/store/useEconomyStore';
-import EconomicMap from '@/components/EconomicMap'; 
+import EconomicMap from '../../components/EconomicMap';
+import { useEconomyStore } from '../../store/useEconomyStore';
 import { Map, Activity, TrendingUp, Terminal, Radio } from 'lucide-react';
 
 export default function Home() {
