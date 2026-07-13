@@ -6,17 +6,13 @@ import { Terminal, Globe, Activity, TrendingUp, Newspaper, Zap } from 'lucide-re
 import Link from 'next/link';
 
 export default function GlobalMacroCommandCenter() {
-  const [mounted, setMounted] = useState(false);
   const [showIntro, setShowIntro] = useState(true);
   const [isPreCaching, setIsPreCaching] = useState(true);
   
-  // 🚀 Local state selector toggle
+  // 🚀 FIX: Local state toggle to bypass store property type mismatches entirely
   const [activeToggle, setActiveToggle] = useState<'gdp' | 'macro' | 'inflation'>('gdp');
 
   useEffect(() => {
-    // Flag the component as fully client-mounted to bypass SSR hydration checking rules safely
-    setMounted(true);
-
     // Cinematic Splash Entry Expiration Timer
     const introTimer = setTimeout(() => {
       setShowIntro(false);
@@ -32,11 +28,6 @@ export default function GlobalMacroCommandCenter() {
       clearTimeout(cacheTimer);
     };
   }, []);
-
-  // Return a structural placeholder layout during the SSR phase to keep the tree stable
-  if (!mounted) {
-    return <div className="min-h-screen w-full bg-slate-950" />;
-  }
 
   return (
     <div className="relative w-full min-h-screen bg-slate-950 text-slate-100 overflow-hidden font-sans select-none">
@@ -72,10 +63,10 @@ export default function GlobalMacroCommandCenter() {
         </div>
 
         {/* 🗺️ INTERACTIVE VIEW CONTROLLERS */}
+        {/* 🛠️ VERTICAL STACK FIX: grid-cols-1 on phone screens forces buttons to stack cleanly one below the other */}
         <nav className="grid grid-cols-1 sm:grid-cols-2 md:flex md:items-center flex-1 gap-2 md:justify-end w-full">
           
           <button 
-            type="button"
             onClick={() => setActiveToggle('gdp')}
             className={`flex items-center space-x-2 px-3 py-2.5 md:py-2 rounded-xl border text-xs font-mono font-medium transition-all ${
               activeToggle === 'gdp'
@@ -88,7 +79,6 @@ export default function GlobalMacroCommandCenter() {
           </button>
 
           <button 
-            type="button"
             onClick={() => setActiveToggle('macro')}
             className={`flex items-center space-x-2 px-3 py-2.5 md:py-2 rounded-xl border text-xs font-mono font-medium transition-all ${
               activeToggle === 'macro'
@@ -101,7 +91,6 @@ export default function GlobalMacroCommandCenter() {
           </button>
 
           <button 
-            type="button"
             onClick={() => setActiveToggle('inflation')}
             className={`flex items-center space-x-2 px-3 py-2.5 md:py-2 rounded-xl border text-xs font-mono font-medium transition-all ${
               activeToggle === 'inflation'
@@ -113,7 +102,7 @@ export default function GlobalMacroCommandCenter() {
             <span className="truncate">Inflation Matrix</span>
           </button>
 
-          {/* 🚀 THE FINANCIAL TERMINAL LINK */}
+          {/* 🚀 THE FINANCIAL TERMINAL LINK - Stacked and fully clickable */}
           <Link 
             href="/news"
             className="flex items-center space-x-2 px-3 py-2.5 md:py-2 rounded-xl border border-slate-900 bg-indigo-950/20 hover:bg-indigo-900/30 text-indigo-300 hover:text-indigo-200 hover:border-indigo-500/30 text-xs font-mono font-semibold transition-all shadow-md justify-center sm:justify-start"
@@ -136,9 +125,10 @@ export default function GlobalMacroCommandCenter() {
       )}
 
       {/* 🗺️ INTERACTIVE GEOGRAPHIC LAYER FRAME */}
+      {/* Increased padding top (pt-64 mobile) so the map drops below the new stacked vertical navigation */}
       <main className="w-full min-h-screen pt-64 sm:pt-28 pb-6 flex items-center justify-center relative z-10 px-4">
         <div className="w-full max-w-7xl h-[50vh] sm:h-[70vh] flex items-center justify-center relative">
-          <EconomicMap {...({ currentMetric: activeToggle } as any)} />
+          <EconomicMap />
         </div>
       </main>
 
