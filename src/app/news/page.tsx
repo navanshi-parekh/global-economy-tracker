@@ -14,7 +14,6 @@ interface LiveArticle {
 }
 
 export default function GlobalHistoricalAndNewsTerminal() {
-  // 🚀 Local segment controller wired directly down into the global chart prop engine
   const [activeSegmentToggle, setActiveSegmentToggle] = useState<'gdp' | 'macro' | 'inflation' | 'workforce'>('gdp');
   const [liveNews, setLiveNews] = useState<LiveArticle[]>([]);
   const store = useEconomyStore();
@@ -54,7 +53,8 @@ export default function GlobalHistoricalAndNewsTerminal() {
   ];
 
   return (
-    <div className="min-h-screen w-full bg-[#05070c] text-slate-100 font-mono p-4 md:p-6 lg:p-8 flex flex-col space-y-4 overflow-x-hidden">
+    /* 🔓 FIX: Swapped out rigid viewport lock flags for min-h-screen and enabled dynamic overflow-y-auto to restore native phone scrolling instantly! */
+    <div className="min-h-screen w-full bg-[#05070c] text-slate-100 font-mono p-4 md:p-6 lg:p-8 flex flex-col space-y-4 overflow-x-hidden overflow-y-auto">
       
       {/* 🎛️ CONTROL HEADER PANEL */}
       <div className="w-full flex flex-col md:flex-row md:items-center md:justify-between border border-slate-800 bg-slate-950/60 rounded-xl p-4 gap-4 backdrop-blur-md">
@@ -76,13 +76,12 @@ export default function GlobalHistoricalAndNewsTerminal() {
         </Link>
       </div>
 
-      {/* 💻 MAIN SPLIT WORKSPACE MATRIX */}
-      <div className="w-full flex flex-col lg:flex-row gap-6 items-stretch flex-grow">
+      {/* 💻 MAIN RESPONSIVE WORKSPACE MATRIX */}
+      <div className="w-full flex flex-col lg:flex-row gap-6 items-stretch">
         
         {/* 📊 LEFT COLUMN: TIME-SERIES GRAPH LAYER */}
         <div className="w-full lg:w-[60%] flex flex-col border border-slate-800 bg-slate-950/40 rounded-xl p-4 space-y-4">
           
-          {/* Segment selection layout configuration */}
           <div className="space-y-2">
             <label className="text-[10px] font-bold text-slate-500 tracking-wider uppercase flex items-center space-x-1">
               <span>⚙️ Select System Time-Series Dataset Trajectory:</span>
@@ -109,12 +108,11 @@ export default function GlobalHistoricalAndNewsTerminal() {
             </div>
           </div>
 
-          {/* 📈 Dynamic Chart Engine Wrapper Component */}
-          <div className="flex-grow w-full bg-slate-950/80 rounded-xl border border-slate-900/60 relative overflow-hidden h-[340px] sm:h-[420px] lg:h-full min-h-[340px]">
+          {/* Chart View Container */}
+          <div className="w-full bg-slate-950/80 rounded-xl border border-slate-900/60 relative overflow-hidden h-[340px] sm:h-[420px] lg:h-[500px]">
             <GlobalChart overrideToggle={activeSegmentToggle} />
           </div>
 
-          {/* System Benchmark Footer Badge */}
           <div className="w-full p-3 rounded-lg bg-slate-950 border border-slate-900 flex items-center justify-between text-xs">
             <span className="text-slate-500 font-medium">Benchmark Year Parameters:</span>
             <span className="text-indigo-400 font-bold bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded">2020 Fixed Baseline</span>
@@ -122,7 +120,7 @@ export default function GlobalHistoricalAndNewsTerminal() {
         </div>
 
         {/* 📰 RIGHT COLUMN: REAL-TIME STREAMING TERMINAL FEED */}
-        <div className="w-full lg:w-[40%] flex flex-col border border-slate-800 bg-slate-950/40 rounded-xl p-4 space-y-4 max-h-[500px] lg:max-h-none">
+        <div className="w-full lg:w-[40%] flex flex-col border border-slate-800 bg-slate-950/40 rounded-xl p-4 space-y-4 min-h-[400px]">
           <div className="flex items-center justify-between border-b border-slate-900 pb-3">
             <div className="flex items-center space-x-2">
               <Terminal className="w-4 h-4 text-emerald-400" />
@@ -134,8 +132,8 @@ export default function GlobalHistoricalAndNewsTerminal() {
             </div>
           </div>
 
-          {/* Scrollable container for items */}
-          <div className="flex-grow overflow-y-auto space-y-3 pr-1 custom-scrollbar">
+          {/* Scrolling News Grid Box */}
+          <div className="space-y-3 custom-scrollbar">
             {liveNews.map((article, index) => (
               <a
                 key={index}
