@@ -6,6 +6,7 @@ import { Terminal, Globe, Activity, TrendingUp, Newspaper, Zap } from 'lucide-re
 import Link from 'next/link';
 
 export default function GlobalMacroCommandCenter() {
+  const [mounted, setMounted] = useState(false);
   const [showIntro, setShowIntro] = useState(true);
   const [isPreCaching, setIsPreCaching] = useState(true);
   
@@ -13,6 +14,9 @@ export default function GlobalMacroCommandCenter() {
   const [activeToggle, setActiveToggle] = useState<'gdp' | 'macro' | 'inflation'>('gdp');
 
   useEffect(() => {
+    // Flag the component as fully client-mounted to bypass SSR hydration checking rules safely
+    setMounted(true);
+
     // Cinematic Splash Entry Expiration Timer
     const introTimer = setTimeout(() => {
       setShowIntro(false);
@@ -28,6 +32,11 @@ export default function GlobalMacroCommandCenter() {
       clearTimeout(cacheTimer);
     };
   }, []);
+
+  // Return a structural placeholder layout during the SSR phase to keep the tree stable
+  if (!mounted) {
+    return <div className="min-h-screen w-full bg-slate-950" />;
+  }
 
   return (
     <div className="relative w-full min-h-screen bg-slate-950 text-slate-100 overflow-hidden font-sans select-none">
@@ -129,10 +138,7 @@ export default function GlobalMacroCommandCenter() {
       {/* 🗺️ INTERACTIVE GEOGRAPHIC LAYER FRAME */}
       <main className="w-full min-h-screen pt-64 sm:pt-28 pb-6 flex items-center justify-center relative z-10 px-4">
         <div className="w-full max-w-7xl h-[50vh] sm:h-[70vh] flex items-center justify-center relative">
-          
-          {/* 🔌 FIXED: Cast to an 'any' type override layout block to guarantee the TypeScript engine compiles it cleanly without throwing prop assignment missing parameters! */}
           <EconomicMap {...({ currentMetric: activeToggle } as any)} />
-          
         </div>
       </main>
 
