@@ -1,66 +1,94 @@
 'use client';
 import React from 'react';
-import { useEconomyStore } from '../../store/useEconomyStore'; 
-import EconomicMap from '../../components/EconomicMap';
-import AIAnalysisPanel from '../../components/AIAnalysisPanel';
 import Link from 'next/link';
-import { ArrowLeft, Landmark, Globe } from 'lucide-react';
+import { useEconomyStore } from '../store/useEconomyStore';
+import DynamicMap from '../components/DynamicMap'; // Adjust path if needed to your Map component
+import { Map, Activity, TrendingUp, Terminal, Radio } from 'lucide-react';
 
-export default function MacroHealthPage() {
-  const store = useEconomyStore() as any; 
-  
-  const activeCountry = store.activeCountry;
-  const globalDataCache = store.globalDataCache || {};
+export default function Home() {
+  // 🔌 Connect to your global Zustand/Context store
+  const { activeMetric, setActiveMetric } = useEconomyStore();
 
-  let currentScore = 60;
-  if (activeCountry) {
-    const codeKey = typeof activeCountry === 'string' 
-      ? activeCountry.toUpperCase() 
-      : (activeCountry.code || activeCountry.id || "").toUpperCase();
-
-    if (codeKey && globalDataCache[codeKey]) {
-      const cachedEntry = globalDataCache[codeKey];
-      currentScore = cachedEntry.healthScore ?? cachedEntry.score ?? 60;
+  // Unified configuration array for your buttons
+  const navigationButtons = [
+    { 
+      id: 'gdp', // maps to main map/base metric
+      label: 'Main Map', 
+      icon: Map, 
+      color: 'text-blue-400 border-blue-500/30 bg-blue-500/10' 
+    },
+    { 
+      id: 'macro', 
+      label: 'Macro Health', 
+      icon: Activity, 
+      color: 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10' 
+    },
+    { 
+      id: 'inflation', 
+      label: 'Inflation Matrix', 
+      icon: TrendingUp, 
+      color: 'text-cyan-400 border-cyan-500/30 bg-cyan-500/10' 
     }
-  }
+  ];
 
   return (
-    <div className="w-screen h-screen bg-slate-950 text-slate-100 font-sans flex flex-col overflow-hidden relative select-none">
+    <div className="h-auto min-h-screen w-full bg-[#05070c] text-slate-100 font-mono p-4 md:p-6 lg:p-8 flex flex-col space-y-6 overflow-y-auto overflow-x-hidden">
       
-      {/* HEADER BAR TRACK */}
-      <div className="w-full bg-slate-900/40 backdrop-blur-md border-b border-slate-800/80 px-6 py-4 flex justify-between items-center absolute top-0 left-0 z-40">
-        <div className="flex items-center space-x-3">
-          <div className="p-2 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-400">
-            <Landmark className="w-5 h-5" />
+      {/* 🎛️ GLOBAL COMMAND CONTROL PANEL */}
+      <div className="w-full flex flex-col md:flex-row md:items-center md:justify-between border border-slate-800 bg-slate-950/60 rounded-xl p-4 gap-4 backdrop-blur-md">
+        <div>
+          <div className="flex items-center space-x-2 text-indigo-400 font-bold tracking-widest text-sm uppercase">
+            <Radio className="w-4 h-4 animate-pulse text-indigo-500" />
+            <span>Universal Cluster Portal</span>
           </div>
-          <div>
-            <h1 className="text-base font-black tracking-tight uppercase flex items-center space-x-2">
-              <span>MACROECONOMIC HEALTH ANALYTICS PLATFORM</span>
-            </h1>
-            <p className="text-xs text-slate-400 font-mono">Sovereign Debt Metrics // Structural Imbalance Aggregations</p>
-          </div>
-        </div>
-
-        <Link href="/" className="flex items-center space-x-1.5 font-mono text-xs bg-slate-900 border border-slate-800 px-3 py-2 rounded-xl text-slate-300 hover:text-indigo-400 hover:border-indigo-500/30 transition-all">
-          <ArrowLeft className="w-4 h-4" />
-          <span>RETURN TO PORTAL</span>
-        </Link>
-      </div>
-
-      {/* HEATMAP LENS CANVAS ENVIRONMENT */}
-      <div className="flex-1 w-full h-full pt-20 relative z-10 bg-slate-950 flex items-center justify-center">
-        <div className="w-[90vw] h-[75vh] bg-slate-900/20 border border-slate-800/40 rounded-2xl shadow-3xl p-4 overflow-hidden flex items-center justify-center">
-          <EconomicMap />
+          <h1 className="text-xl md:text-2xl font-black mt-1 text-white tracking-tight">
+            GLOBAL MACRO COMMAND CENTER
+          </h1>
         </div>
       </div>
 
-      {/* SLIDING CONTEXT INTEL DRAWER PANEL CONTAINER */}
-      <AIAnalysisPanel />
+      {/* 🧭 BUTTON CONTROLLER CONTAINER */}
+      <div className="w-full border border-slate-800 bg-slate-950/40 rounded-xl p-4 space-y-3">
+        <label className="text-[10px] font-bold text-slate-500 tracking-wider uppercase">
+          🚀 Select Active Telemetry Layer:
+        </label>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+          {navigationButtons.map((btn) => {
+            const Icon = btn.icon;
+            const isSelected = activeMetric === btn.id;
+            
+            return (
+              <button
+                key={btn.id}
+                onClick={() => setActiveMetric(btn.id as any)}
+                className={`flex items-center justify-center space-x-2 px-4 py-3 rounded-xl border text-xs font-bold font-mono tracking-wide transition-all duration-150 ${
+                  isSelected
+                    ? btn.color + ' border-current shadow-md scale-[1.02]'
+                    : 'border-slate-800 bg-slate-950/40 text-slate-400 hover:text-slate-200 hover:border-slate-700'
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                <span>{btn.label}</span>
+              </button>
+            );
+          })}
 
-      {/* LOWER NOTIFICATION BAR WIDGET */}
-      <div className="absolute bottom-4 left-6 z-40 bg-slate-900/80 border border-slate-800 backdrop-blur-md px-4 py-2.5 rounded-xl max-w-sm shadow-xl flex items-center space-x-3 text-[11px] font-mono font-medium text-slate-400">
-        <Globe className="w-4 h-4 text-emerald-400 animate-spin-slow shrink-0" />
-        <span>Click on any country element to view localized economic health indices.</span>
+          {/* 📰 LINKED FINANCIAL TERMINAL BUTTON */}
+          <Link
+            href="/news"
+            className="flex items-center justify-center space-x-2 px-4 py-3 rounded-xl border border-indigo-500/30 bg-indigo-500/5 text-indigo-400 hover:bg-indigo-500/10 hover:text-white hover:border-indigo-500/60 transition-all font-bold text-xs shadow-sm group"
+          >
+            <Terminal className="w-4 h-4 text-indigo-500 group-hover:animate-pulse" />
+            <span>Financial Terminal</span>
+          </Link>
+        </div>
+      </div>
+
+      {/* 🗺️ INTERACTIVE MAP ENGINE RENDER MATRIX */}
+      <div className="w-full flex-grow border border-slate-800 bg-slate-950/20 rounded-xl p-4 flex items-center justify-center min-h-[450px] lg:min-h-[600px] relative overflow-hidden">
+        {/* Pass activeMetric to your map component if it doesn't ingest the global state store hook internally */}
+        <DynamicMap currentMetric={activeMetric} />
       </div>
 
     </div>
